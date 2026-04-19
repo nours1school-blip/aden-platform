@@ -62,120 +62,409 @@
 </head>
 <body>
 <div class="container">
-  <div class="header"><h1>🕰️ سفراء الزمن</h1><p>شاركنا لحظاتك الجميلة واقرأ تجارب الآخرين</p></div>
-  <div style="text-align:center;margin:30px 0"><button class="btn" onclick="openModal()">📤 شارك تجربتك الآن</button></div>
-  <div id="gallery" class="grid"><div class="empty-state" id="emptyState"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><p>لا توجد تجارب حتى الآن.<br>كن أول من يشارك!</p></div></div>
+  <div class="header">
+    <h1>🕰️ سفراء الزمن</h1>
+    <p>شاركنا لحظاتك الجميلة واقرأ تجارب الآخرين</p>
+  </div>
+  <div style="text-align:center;margin:30px 0">
+    <button class="btn" id="openModalBtn" onclick="openModal()">📤 شارك تجربتك الآن</button>
+  </div>
+  <div id="gallery" class="grid">
+    <div class="empty-state" id="emptyState">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+      </svg>
+      <p>لا توجد تجارب حتى الآن.<br>كن أول من يشارك!</p>
+    </div>
+  </div>
 </div>
-<div id="modal" class="modal"><div class="modal-content"><button class="modal-close" onclick="closeModal()" aria-label="إغلاق">❌</button><h3 class="modal-title">📝 مشاركة تجربة جديدة</h3><form id="form"><div class="form-group"><label class="form-label" for="userName"><span class="required">*</span> اسمك الكريم</label><input type="text" id="userName" class="form-control" placeholder="أدخل اسمك" required minlength="2" maxlength="50"></div><div class="form-group"><label class="form-label" for="placeName"><span class="required">*</span> المكان الذي زرته</label><input type="text" id="placeName" class="form-control" placeholder="مثال: متحف القاهرة، جبل النور..." required minlength="3" maxlength="100"></div><div class="form-group"><label class="form-label"><span class="required">*</span> أضف صورة لتجربتك</label><div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()"><div id="uploadPlaceholder"><div style="font-size:2.5rem;margin-bottom:10px">📷</div><div>اضغط لاختيار صورة</div><div style="font-size:.85rem;color:var(--gray);margin-top:5px">JPG, PNG, WebP (الحد الأقصى 5MB)</div></div><img id="previewImage" style="display:none" alt="معاينة الصورة"></div><input type="file" id="fileInput" accept="image/*" style="display:none" required><div id="uploadStatus"></div></div><div class="form-group"><label class="form-label" for="rating"><span class="required">*</span> تقييمك للتجربة</label><select id="rating" class="form-control" required><option value="">اختر التقييم ⭐</option><option value="⭐">⭐ - عادي</option><option value="⭐⭐">⭐⭐ - جيد</option><option value="⭐⭐⭐">⭐⭐⭐ - جيد جداً</option><option value="⭐⭐⭐⭐">⭐⭐⭐⭐ - ممتاز</option><option value="⭐⭐⭐⭐⭐">⭐⭐⭐⭐⭐ - استثنائي</option></select></div><div class="form-group"><label class="form-label" for="comment"><span class="required">*</span> تفاصيل تجربتك</label><textarea id="comment" class="form-control" placeholder="اكتب لنا عن تجربتك..." required minlength="20" maxlength="500"></textarea><div class="form-text" style="text-align:left"><span id="charCount">0</span>/500 حرف</div></div><div id="alertBox"></div><button type="submit" class="btn" style="width:100%;margin-top:10px" id="submitBtn">🚀 نشر التجربة</button><p style="text-align:center;margin-top:15px;font-size:.9rem;color:var(--gray)">🔒 بياناتك محمية • الصور تُخزن بشكل آمن</p></form></div></div>
+
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal()" aria-label="إغلاق">❌</button>
+    <h3 class="modal-title">📝 مشاركة تجربة جديدة</h3>
+    <form id="form">
+      <div class="form-group">
+        <label class="form-label" for="userName"><span class="required">*</span> اسمك الكريم</label>
+        <input type="text" id="userName" class="form-control" placeholder="أدخل اسمك" required minlength="2" maxlength="50">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="placeName"><span class="required">*</span> المكان الذي زرته</label>
+        <input type="text" id="placeName" class="form-control" placeholder="مثال: متحف القاهرة، جبل النور..." required minlength="3" maxlength="100">
+      </div>
+      <div class="form-group">
+        <label class="form-label"><span class="required">*</span> أضف صورة لتجربتك</label>
+        <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+          <div id="uploadPlaceholder">
+            <div style="font-size:2.5rem;margin-bottom:10px">📷</div>
+            <div>اضغط لاختيار صورة</div>
+            <div style="font-size:.85rem;color:var(--gray);margin-top:5px">JPG, PNG, WebP (الحد الأقصى 5MB)</div>
+          </div>
+          <img id="previewImage" style="display:none" alt="معاينة الصورة">
+        </div>
+        <input type="file" id="fileInput" accept="image/*" style="display:none" required>
+        <div id="uploadStatus"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="rating"><span class="required">*</span> تقييمك للتجربة</label>
+        <select id="rating" class="form-control" required>
+          <option value="">اختر التقييم ⭐</option>
+          <option value="⭐">⭐ - عادي</option>
+          <option value="⭐⭐">⭐⭐ - جيد</option>
+          <option value="⭐⭐⭐">⭐⭐⭐ - جيد جداً</option>
+          <option value="⭐⭐⭐⭐">⭐⭐⭐⭐ - ممتاز</option>
+          <option value="⭐⭐⭐⭐⭐">⭐⭐⭐⭐⭐ - استثنائي</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="comment"><span class="required">*</span> تفاصيل تجربتك</label>
+        <textarea id="comment" class="form-control" placeholder="اكتب لنا عن تجربتك..." required minlength="20" maxlength="500"></textarea>
+        <div class="form-text" style="text-align:left"><span id="charCount">0</span>/500 حرف</div>
+      </div>
+      <div id="alertBox"></div>
+      <button type="submit" class="btn" style="width:100%;margin-top:10px" id="submitBtn">🚀 نشر التجربة</button>
+      <p style="text-align:center;margin-top:15px;font-size:.9rem;color:var(--gray)">🔒 بياناتك محمية • الصور تُخزن بشكل آمن</p>
+    </form>
+  </div>
+</div>
+
 <script>
-// ✅ تهيئة Supabase - المفاتيح الصحيحة
+// ✅ تهيئة Supabase
 const SUPABASE_URL = 'https://txqqfiphdsuedwcrvjjs.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR4cXFmaXBoZHN1ZWR3Y3J2ampzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY1OTIzOTQsImV4cCI6MjA5MjE2ODM5NH0.csgtDlFliEZzNgntm3IT99IEOXFjHTV3xqFP_3DJNWc';
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-let selectedFile = null, uploadedImageUrl = null;
-const BUCKET_NAME = 'experiences', MAX_FILE_SIZE = 5 * 1024 * 1024;
+// 📦 المتغيرات العامة
+let selectedFile = null;
+let uploadedImageUrl = null;
+const BUCKET_NAME = 'experiences';
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
-const elements = {
-  modal: document.getElementById('modal'), form: document.getElementById('form'),
-  gallery: document.getElementById('gallery'), emptyState: document.getElementById('emptyState'),
-  submitBtn: document.getElementById('submitBtn'), alertBox: document.getElementById('alertBox'),
-  fileInput: document.getElementById('fileInput'), uploadArea: document.getElementById('uploadArea'),
-  previewImage: document.getElementById('previewImage'), uploadPlaceholder: document.getElementById('uploadPlaceholder'),
-  uploadStatus: document.getElementById('uploadStatus'), comment: document.getElementById('comment'),
-  charCount: document.getElementById('charCount')
-};
+// 🎭 عناصر DOM
+let elements = {};
 
-function init() { setupEventListeners(); loadExperiences(); console.log('✅ تم التهيئة مع Supabase'); }
-
-function setupEventListeners() {
-  elements.comment?.addEventListener('input', e => {
-    elements.charCount.textContent = e.target.value.length;
-    elements.charCount.style.color = e.target.value.length > 480 ? 'var(--warning)' : 'inherit';
-  });
-  elements.fileInput?.addEventListener('change', handleFileSelect);
-  elements.form?.addEventListener('submit', handleFormSubmit);
-  elements.modal?.addEventListener('click', e => { if (e.target === elements.modal) closeModal(); });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape' && elements.modal?.classList.contains('show')) closeModal(); });
+// ============================================
+// 🚪 دوال النافذة المنبثقة (عامة)
+// ============================================
+function openModal() {
+  console.log('🔴 openModal called');
+  const modal = document.getElementById('modal');
+  if (modal) {
+    modal.classList.add('show');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => {
+      const nameInput = document.getElementById('userName');
+      if (nameInput) nameInput.focus();
+    }, 300);
+    console.log('✅ Modal opened');
+  } else {
+    console.error('❌ Modal element not found!');
+  }
 }
 
+function closeModal() {
+  console.log('🔵 closeModal called');
+  const modal = document.getElementById('modal');
+  if (modal) {
+    modal.classList.remove('show');
+    document.body.style.overflow = '';
+    resetForm();
+    console.log('✅ Modal closed');
+  }
+}
+
+// ============================================
+// 🚀 تهيئة التطبيق
+// ============================================
+function initApp() {
+  console.log(' Initializing app...');
+  
+  // تخزين العناصر
+  elements = {
+    modal: document.getElementById('modal'),
+    form: document.getElementById('form'),
+    gallery: document.getElementById('gallery'),
+    emptyState: document.getElementById('emptyState'),
+    submitBtn: document.getElementById('submitBtn'),
+    alertBox: document.getElementById('alertBox'),
+    fileInput: document.getElementById('fileInput'),
+    uploadArea: document.getElementById('uploadArea'),
+    previewImage: document.getElementById('previewImage'),
+    uploadPlaceholder: document.getElementById('uploadPlaceholder'),
+    uploadStatus: document.getElementById('uploadStatus'),
+    comment: document.getElementById('comment'),
+    charCount: document.getElementById('charCount')
+  };
+  
+  console.log('📦 Elements:', elements);
+  
+  // إعداد المستمعين
+  setupEventListeners();
+  
+  // تحميل التجارب
+  loadExperiences();
+  
+  console.log('✅ App initialized successfully');
+}
+
+// ============================================
+// 🎧 إعداد مستمعي الأحداث
+// ============================================
+function setupEventListeners() {
+  console.log('🎧 Setting up event listeners...');
+  
+  // عدّاد الأحرف
+  if (elements.comment) {
+    elements.comment.addEventListener('input', function(e) {
+      const length = e.target.value.length;
+      if (elements.charCount) {
+        elements.charCount.textContent = length;
+        elements.charCount.style.color = length > 480 ? 'var(--warning)' : 'inherit';
+      }
+    });
+  }
+  
+  // اختيار الملف
+  if (elements.fileInput) {
+    elements.fileInput.addEventListener('change', handleFileSelect);
+  }
+  
+  // إرسال النموذج
+  if (elements.form) {
+    elements.form.addEventListener('submit', handleFormSubmit);
+  }
+  
+  // إغلاق النافذة عند النقر خارجها
+  if (elements.modal) {
+    elements.modal.addEventListener('click', function(e) {
+      if (e.target === elements.modal) {
+        closeModal();
+      }
+    });
+  }
+  
+  // إغلاق بمفتاح Escape
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && elements.modal && elements.modal.classList.contains('show')) {
+      closeModal();
+    }
+  });
+  
+  console.log('✅ Event listeners set up');
+}
+
+// ============================================
+// 📷 معالجة اختيار الملف
+// ============================================
 function handleFileSelect(e) {
-  const file = e.target.files[0]; if (!file) return;
-  if (file.size > MAX_FILE_SIZE) { showAlert('❌ حجم الصورة كبير جداً (الحد 5 ميجابايت)', 'error'); elements.fileInput.value = ''; return; }
-  if (!file.type.startsWith('image/')) { showAlert('❌ الرجاء اختيار صورة فقط', 'error'); elements.fileInput.value = ''; return; }
+  const file = e.target.files[0];
+  if (!file) return;
+  
+  if (file.size > MAX_FILE_SIZE) {
+    showAlert('❌ حجم الصورة كبير جداً (الحد 5 ميجابايت)', 'error');
+    elements.fileInput.value = '';
+    return;
+  }
+  
+  if (!file.type.startsWith('image/')) {
+    showAlert('❌ الرجاء اختيار صورة فقط', 'error');
+    elements.fileInput.value = '';
+    return;
+  }
+  
   selectedFile = file;
+  
   const reader = new FileReader();
-  reader.onload = ev => { elements.previewImage.src = ev.target.result; elements.previewImage.style.display = 'block'; elements.uploadPlaceholder.style.display = 'none'; elements.uploadArea.classList.add('has-image'); };
+  reader.onload = function(event) {
+    if (elements.previewImage) {
+      elements.previewImage.src = event.target.result;
+      elements.previewImage.style.display = 'block';
+    }
+    if (elements.uploadPlaceholder) {
+      elements.uploadPlaceholder.style.display = 'none';
+    }
+    if (elements.uploadArea) {
+      elements.uploadArea.classList.add('has-image');
+    }
+  };
   reader.readAsDataURL(file);
+  
   showStatus('ℹ️ الصورة جاهزة للرفع', 'info');
 }
 
-function openModal() { elements.modal.classList.add('show'); document.body.style.overflow = 'hidden'; setTimeout(() => document.getElementById('userName')?.focus(), 300); }
-function closeModal() { elements.modal.classList.remove('show'); document.body.style.overflow = ''; resetForm(); }
-
+// ============================================
+// 🎯 معالجة إرسال النموذج
+// ============================================
 async function handleFormSubmit(e) {
   e.preventDefault();
-  if (!selectedFile) { showAlert('⚠️ يرجى اختيار صورة أولاً', 'error'); return; }
-  elements.submitBtn.disabled = true; elements.submitBtn.innerHTML = '<span class="spinner"></span> جاري النشر...'; clearAlert();
+  
+  if (!selectedFile) {
+    showAlert('⚠️ يرجى اختيار صورة أولاً', 'error');
+    return;
+  }
+  
+  elements.submitBtn.disabled = true;
+  elements.submitBtn.innerHTML = '<span class="spinner"></span> جاري النشر...';
+  clearAlert();
+  
   try {
     showStatus('📤 جاري رفع الصورة...', 'info');
+    
     const fileExt = selectedFile.name.split('.').pop();
-    const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-    const { error: uploadError } = await supabase.storage.from(BUCKET_NAME).upload(fileName, selectedFile, { cacheControl: '3600', upsert: false });
+    const fileName = Date.now() + '-' + Math.random().toString(36).substring(7) + '.' + fileExt;
+    
+    const { error: uploadError } = await supabase
+      .storage
+      .from(BUCKET_NAME)
+      .upload(fileName, selectedFile, { cacheControl: '3600', upsert: false });
+    
     if (uploadError) throw new Error('فشل رفع الصورة: ' + uploadError.message);
+    
     const {  { publicUrl } } = supabase.storage.from(BUCKET_NAME).getPublicUrl(fileName);
     uploadedImageUrl = publicUrl;
+    
     showStatus('💾 جاري حفظ البيانات...', 'info');
-    const { error: dbError } = await supabase.from('experiences').insert([{ user_name: document.getElementById('userName').value.trim(), place: document.getElementById('placeName').value.trim(), rating: document.getElementById('rating').value, comment: document.getElementById('comment').value.trim(), image_url: uploadedImageUrl, created_at: new Date().toISOString() }]);
+    
+    const { error: dbError } = await supabase.from('experiences').insert([{
+      user_name: document.getElementById('userName').value.trim(),
+      place: document.getElementById('placeName').value.trim(),
+      rating: document.getElementById('rating').value,
+      comment: document.getElementById('comment').value.trim(),
+      image_url: uploadedImageUrl,
+      created_at: new Date().toISOString()
+    }]);
+    
     if (dbError) throw new Error('فشل الحفظ: ' + dbError.message);
+    
     showAlert('🎉 تم النشر بنجاح! ✨', 'success');
-    addCardToGallery({ user_name: document.getElementById('userName').value, place: document.getElementById('placeName').value, rating: document.getElementById('rating').value, comment: document.getElementById('comment').value, image_url: uploadedImageUrl, created_at: new Date().toISOString() });
-    setTimeout(() => closeModal(), 1500);
-  } catch (error) { console.error('❌ Error:', error); showAlert('❌ ' + error.message, 'error'); }
-  finally { elements.submitBtn.disabled = false; elements.submitBtn.innerHTML = '🚀 نشر التجربة'; }
+    
+    addCardToGallery({
+      user_name: document.getElementById('userName').value,
+      place: document.getElementById('placeName').value,
+      rating: document.getElementById('rating').value,
+      comment: document.getElementById('comment').value,
+      image_url: uploadedImageUrl,
+      created_at: new Date().toISOString()
+    });
+    
+    setTimeout(function() { closeModal(); }, 1500);
+    
+  } catch (error) {
+    console.error('❌ Error:', error);
+    showAlert('❌ ' + error.message, 'error');
+  } finally {
+    elements.submitBtn.disabled = false;
+    elements.submitBtn.innerHTML = '🚀 نشر التجربة';
+  }
 }
 
+// ============================================
+// 🎴 إضافة بطاقة للمعرض
+// ============================================
 function addCardToGallery(data) {
-  if (elements.emptyState) elements.emptyState.style.display = 'none';
-  const card = document.createElement('div'); card.className = 'card';
-  card.innerHTML = `<img src="${escapeHtml(data.image_url)}" alt="${escapeHtml(data.place)}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x200?text=صورة+غير+متوفرة'"><div class="card-body"><h4 class="card-title">📍 ${escapeHtml(data.place)}</h4><p class="card-text">${escapeHtml(data.comment)}</p><div class="card-rating">${data.rating}</div><span class="card-author">✍️ ${escapeHtml(data.user_name)}</span><small class="card-date">📅 ${new Date(data.created_at).toLocaleDateString('ar-SA')}</small></div>`;
-  if (elements.gallery.firstChild) elements.gallery.insertBefore(card, elements.gallery.firstChild); else elements.gallery.appendChild(card);
+  if (elements.emptyState) {
+    elements.emptyState.style.display = 'none';
+  }
+  
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = '<img src="' + escapeHtml(data.image_url) + '" alt="' + escapeHtml(data.place) + '" loading="lazy" onerror="this.src=\'https://via.placeholder.com/300x200?text=صورة+غير+متوفرة\'"><div class="card-body"><h4 class="card-title">📍 ' + escapeHtml(data.place) + '</h4><p class="card-text">' + escapeHtml(data.comment) + '</p><div class="card-rating">' + data.rating + '</div><span class="card-author">✍️ ' + escapeHtml(data.user_name) + '</span><small class="card-date">📅 ' + new Date(data.created_at).toLocaleDateString('ar-SA') + '</small></div>';
+  
+  if (elements.gallery.firstChild) {
+    elements.gallery.insertBefore(card, elements.gallery.firstChild);
+  } else {
+    elements.gallery.appendChild(card);
+  }
 }
 
+// ============================================
+// 📥 تحميل التجارب
+// ============================================
 async function loadExperiences() {
   try {
     const { data, error } = await supabase.from('experiences').select('*').order('created_at', { ascending: false }).limit(50);
     if (error) { console.error('❌ Load error:', error); return; }
-    if (data?.length > 0) { if (elements.emptyState) elements.emptyState.style.display = 'none'; data.forEach(exp => addCardToGallery(exp)); console.log(`✅ Loaded ${data.length}`); }
-  } catch (e) { console.error('❌ Error:', e); }
+    if (data && data.length > 0) {
+      if (elements.emptyState) elements.emptyState.style.display = 'none';
+      data.forEach(function(exp) { addCardToGallery(exp); });
+      console.log('✅ Loaded ' + data.length + ' experiences');
+    }
+  } catch (e) {
+    console.error('❌ Error:', e);
+  }
 }
 
-function showAlert(msg, type) {
+// ============================================
+// 🔔 التنبيهات
+// ============================================
+function showAlert(message, type) {
   if (!elements.alertBox) return;
   const cls = type === 'success' ? 'alert-success' : type === 'error' ? 'alert-error' : 'alert-info';
-  elements.alertBox.innerHTML = `<div class="alert ${cls}">${msg}</div>`;
-  setTimeout(() => { if (elements.alertBox.firstChild) { elements.alertBox.firstChild.style.opacity = '0'; setTimeout(() => elements.alertBox.innerHTML = '', 300); } }, 5000);
+  elements.alertBox.innerHTML = '<div class="alert ' + cls + '">' + message + '</div>';
+  setTimeout(function() {
+    if (elements.alertBox.firstChild) {
+      elements.alertBox.firstChild.style.opacity = '0';
+      setTimeout(function() { elements.alertBox.innerHTML = ''; }, 300);
+    }
+  }, 5000);
 }
-function showStatus(msg, type) {
+
+function showStatus(message, type) {
   if (!elements.uploadStatus) return;
   const cls = type === 'success' ? 'alert-success' : type === 'error' ? 'alert-error' : 'alert-info';
-  elements.uploadStatus.innerHTML = `<div class="alert ${cls}" style="margin:10px 0 0;padding:8px 12px">${msg}</div>`;
+  elements.uploadStatus.innerHTML = '<div class="alert ' + cls + '" style="margin:10px 0 0;padding:8px 12px">' + message + '</div>';
 }
-function clearAlert() { if (elements.alertBox) elements.alertBox.innerHTML = ''; if (elements.uploadStatus) elements.uploadStatus.innerHTML = ''; }
+
+function clearAlert() {
+  if (elements.alertBox) elements.alertBox.innerHTML = '';
+  if (elements.uploadStatus) elements.uploadStatus.innerHTML = '';
+}
+
+// ============================================
+// 🔄 إعادة تعيين النموذج
+// ============================================
 function resetForm() {
   if (elements.form) elements.form.reset();
-  elements.previewImage.style.display = 'none'; elements.uploadPlaceholder.style.display = 'block'; elements.uploadArea.classList.remove('has-image');
-  elements.charCount.textContent = '0'; elements.charCount.style.color = 'inherit';
-  selectedFile = null; uploadedImageUrl = null; clearAlert();
+  if (elements.previewImage) elements.previewImage.style.display = 'none';
+  if (elements.uploadPlaceholder) elements.uploadPlaceholder.style.display = 'block';
+  if (elements.uploadArea) elements.uploadArea.classList.remove('has-image');
+  if (elements.charCount) {
+    elements.charCount.textContent = '0';
+    elements.charCount.style.color = 'inherit';
+  }
+  selectedFile = null;
+  uploadedImageUrl = null;
+  clearAlert();
 }
-function escapeHtml(t) { if (!t) return ''; const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
 
-document.addEventListener('DOMContentLoaded', () => {
-  supabase.from('experiences').select('count', { count: 'exact', head: true }).then(({ error }) => {
-    if (error) { console.error('❌ Connection failed:', error); showAlert('⚠️ مشكلة في الاتصال', 'error'); }
-    else console.log('✅ Connected to Supabase');
+// ============================================
+// 🔐 حماية XSS
+// ============================================
+function escapeHtml(text) {
+  if (!text) return '';
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// ============================================
+// 🚀 بدء التطبيق عند تحميل الصفحة
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('📄 DOMContentLoaded');
+  
+  // اختبار الاتصال
+  supabase.from('experiences').select('count', { count: 'exact', head: true }).then(function(result) {
+    if (result.error) {
+      console.error('❌ Connection failed:', result.error);
+      showAlert('⚠️ مشكلة في الاتصال بقاعدة البيانات', 'error');
+    } else {
+      console.log('✅ Connected to Supabase successfully');
+    }
   });
-  init();
+  
+  // تهيئة التطبيق
+  initApp();
 });
 </script>
 </body>
