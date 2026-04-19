@@ -9,7 +9,12 @@
 <!-- ✅ Uploadcare Widget v3.x -->
 <script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js"></script>
 <script>
-  UPLOADCARE_PUBLIC_KEY = "492ad76c8d4cd40b9428";
+  // تأكد أن المفتاح نص حرفياً
+window.UPLOADCARE_PUBLIC_KEY = "492ad76c8d4cd40b9428";
+// تهيئة Uploadcare بشكل صحيح
+uploadcare.registerTab('preview', uploadcare.tabEffects);
+uploadcare.registerTab('transform', uploadcare.tabTransform);
+  
   UPLOADCARE_EFFECTS = "crop,mask,filter";
   UPLOADCARE_TABS = "file camera url facebook gdrive";
   
