@@ -2,271 +2,308 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>سفراء الزمن</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;800&family=Tajawal&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
-body{font-family:Cairo;background:#f5f7fb;margin:0;padding:20px}
-.container{max-width:1000px;margin:auto}
 
-h2{text-align:center}
+/* ===== BASE ===== */
+*{box-sizing:border-box;font-family:'Tajawal',sans-serif}
+body{margin:0;background:linear-gradient(135deg,#e9f2ff,#f7fbff)}
 
-.btn{
-background:#0b5ed7;
-color:#fff;
-padding:12px 20px;
-border:none;
-border-radius:10px;
-cursor:pointer;
-font-weight:bold;
+/* ===== NAVBAR ===== */
+.navbar{
+position:fixed;top:0;width:100%;
+background:#0077be;color:#fff;
+display:flex;justify-content:space-between;
+padding:12px 25px;z-index:1000;
 }
+.navbar ul{display:flex;gap:15px;list-style:none}
+.navbar a{color:#fff;text-decoration:none;font-weight:bold}
 
-.grid{
+/* ===== HERO ===== */
+.hero{height:100vh;background:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e') center/cover}
+.hero-overlay{
+background:rgba(0,0,0,.6);
+height:100%;display:flex;
+flex-direction:column;justify-content:center;align-items:center;
+color:#fff;text-align:center;
+}
+.btn-primary{background:#f4a460;padding:12px 28px;border-radius:10px}
+
+/* ===== SECTIONS ===== */
+.section{padding:90px 20px}
+.section-title{text-align:center;color:#0077be;font-size:28px}
+
+/* ===== EXPERIENCES ===== */
+.gallery{
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-gap:20px;
-margin-top:20px;
+gap:20px;max-width:1100px;margin:30px auto;
+}
+.gallery-card{
+background:#fff;border-radius:15px;
+overflow:hidden;box-shadow:0 10px 25px rgba(0,0,0,.1);
+}
+.gallery-card img{width:100%;height:200px;object-fit:cover}
+.card-content{text-align:center;padding:10px}
+
+/* ===== BUTTON ===== */
+.primary-btn{
+background:#0077be;color:#fff;
+border:none;padding:12px 25px;
+border-radius:25px;cursor:pointer;
+display:block;margin:20px auto;
 }
 
-.card{
-background:#fff;
-border-radius:15px;
-overflow:hidden;
-box-shadow:0 5px 20px rgba(0,0,0,.1);
-}
-
-.card img{
-width:100%;
-height:200px;
-object-fit:cover;
-}
-
-.card div{padding:15px}
-
+/* ===== MODAL ===== */
 .modal{
-display:none;
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.6);
-justify-content:center;
-align-items:center;
+display:none;position:fixed;
+inset:0;background:rgba(0,0,0,.6);
+align-items:center;justify-content:center;
 }
-
 .modal-content{
-background:#fff;
+background:#fff;padding:20px;border-radius:15px;
+width:90%;max-width:400px;
+}
+
+/* ===== UPLOAD BOX ===== */
+#uploadBox{
+margin-top:10px;
 padding:20px;
+border:2px dashed #0077be;
+border-radius:12px;
+text-align:center;
+cursor:pointer;
+background:#f7fbff;
+transition:.2s;
+}
+#uploadBox:hover{background:#e6f2ff}
+#preview{
+width:100%;margin-top:10px;
+border-radius:10px;display:none;
+}
+
+/* ===== NEARBY ===== */
+.nearby-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;max-width:1100px;margin:auto;
+}
+.nearby-item{
+background:#fff;border-radius:16px;
+overflow:hidden;text-align:center;
+box-shadow:0 10px 25px rgba(0,0,0,.12);
+}
+.nearby-item img{width:100%;height:160px;object-fit:cover}
+
+/* ===== SURVEY ===== */
+.survey-form{
+max-width:500px;margin:40px auto;
+background:#fff;padding:20px;
 border-radius:15px;
-width:90%;
-max-width:400px;
+box-shadow:0 10px 25px rgba(0,0,0,.1);
+display:flex;flex-direction:column;gap:10px;
+}
+.survey-form input,.survey-form textarea{
+padding:10px;border-radius:10px;border:1px solid #ddd;
 }
 
-input,textarea,select{
-width:100%;
-margin-top:10px;
-padding:10px;
-border-radius:8px;
-border:1px solid #ccc;
+/* ===== FOOTER ===== */
+#footer{
+background:#0b3c5d;color:#fff;
+text-align:center;padding:30px;
+}
+.social{
+display:flex;justify-content:center;
+gap:20px;margin-top:10px;
+font-size:20px;
 }
 
-.preview{
-width:100%;
-margin-top:10px;
-border-radius:10px;
-display:none;
-}
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<!-- NAVBAR -->
+<nav class="navbar">
+<h2>عدن</h2>
+<ul>
+<li><a href="#home">الرئيسية</a></li>
+<li><a href="#exp">شارك تجربتك</a></li>
+<li><a href="#nearby">أماكن قريبة</a></li>
+<li><a href="#survey">استبيان</a></li>
+</ul>
+</nav>
 
-<h2>🌍 تجارب الزوار</h2>
-
-<button class="btn" onclick="openModal()">➕ شارك تجربتك</button>
-
-<div id="gallery" class="grid"></div>
-
+<!-- HERO -->
+<section id="home" class="hero">
+<div class="hero-overlay">
+<h1>اكتشف سحر عدن</h1>
+<p>مدينة البحر والتاريخ</p>
+<a href="#exp" class="btn-primary">ابدأ</a>
 </div>
+</section>
 
-<!-- Modal -->
+<!-- EXPERIENCES -->
+<section id="exp" class="section">
+<h2 class="section-title">شارك تجربتك</h2>
+
+<button class="primary-btn" onclick="openModal()">إضافة تجربة</button>
+
+<div id="gallery" class="gallery"></div>
+</section>
+
+<!-- MODAL -->
 <div id="modal" class="modal">
-  <div class="modal-content">
+<div class="modal-content">
 
-    <span onclick="closeModal()" style="cursor:pointer">❌</span>
+<h3 style="text-align:center">📸 شارك تجربتك</h3>
 
-    <h3>مشاركة تجربة</h3>
+<form id="form">
+<input type="text" id="name" placeholder="اسمك" required>
+<input type="text" id="place" placeholder="المكان" required>
 
-    <form id="form">
+<div id="uploadBox">اضغط أو اسحب صورة هنا</div>
+<input type="file" id="file" accept="image/*" hidden>
 
-      <input type="text" id="name" placeholder="اسمك" required>
-      <input type="text" id="place" placeholder="المكان" required>
+<img id="preview">
 
-      <input type="file" id="file" accept="image/*" required>
-      <img id="preview" class="preview">
+<textarea id="comment" placeholder="تعليقك" required></textarea>
 
-      <select id="rating" required>
-        <option value="">التقييم</option>
-        <option>⭐</option>
-        <option>⭐⭐</option>
-        <option>⭐⭐⭐</option>
-        <option>⭐⭐⭐⭐</option>
-        <option>⭐⭐⭐⭐⭐</option>
-      </select>
+<button class="primary-btn">نشر</button>
+</form>
 
-      <textarea id="comment" placeholder="اكتب تجربتك..." required></textarea>
-
-      <button class="btn" type="submit" id="submitBtn">نشر</button>
-
-    </form>
-
-  </div>
 </div>
+</div>
+
+<!-- NEARBY -->
+<section id="nearby" class="section">
+<h2 class="section-title">أماكن قريبة</h2>
+
+<div class="nearby-grid">
+<div class="nearby-item">
+<img src="https://source.unsplash.com/400x300/?park">
+<p>حديقة</p>
+</div>
+<div class="nearby-item">
+<img src="https://source.unsplash.com/400x300/?mall">
+<p>مول</p>
+</div>
+</div>
+</section>
+
+<!-- SURVEY -->
+<section id="survey" class="section">
+<h2 class="section-title">استبيان</h2>
+
+<form class="survey-form" action="https://formspree.io/f/xaqajwvd" method="POST">
+<input type="text" name="name" placeholder="اسمك">
+<textarea name="msg" placeholder="رأيك"></textarea>
+<button class="primary-btn">إرسال</button>
+</form>
+</section>
+
+<!-- FOOTER -->
+<footer id="footer">
+<p>© 2026 سفراء الزمن</p>
+<div class="social">
+<i class="fab fa-facebook"></i>
+<i class="fab fa-instagram"></i>
+<i class="fab fa-twitter"></i>
+</div>
+</footer>
 
 <script>
 
-/* =========================
-   إعداد Supabase
-========================= */
-const SUPABASE_URL = "https://txqqfiphdsuedwcrvjjs.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR4cXFmaXBoZHN1ZWR3Y3J2ampzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY1OTIzOTQsImV4cCI6MjA5MjE2ODM5NH0.csgtDlFliEZzNgntm3IT99IEOXFjHTV3xqFP_3DJNWc";
+const modal = document.getElementById("modal");
+const form = document.getElementById("form");
+const gallery = document.getElementById("gallery");
 
-const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const uploadBox = document.getElementById("uploadBox");
+const fileInput = document.getElementById("file");
+const preview = document.getElementById("preview");
 
-/* =========================
-   Modal
-========================= */
-function openModal(){
-  document.getElementById("modal").style.display="flex";
-}
-function closeModal(){
-  document.getElementById("modal").style.display="none";
-}
+let imageUrl = "";
 
-/* =========================
-   Preview Image
-========================= */
-document.getElementById("file").addEventListener("change",(e)=>{
-  const file = e.target.files[0];
-  const reader = new FileReader();
+/* ===== فتح ===== */
+function openModal(){modal.style.display="flex"}
 
-  reader.onload = ()=>{
-    const img = document.getElementById("preview");
-    img.src = reader.result;
-    img.style.display="block";
-  }
+/* ===== رفع ===== */
+uploadBox.onclick = ()=>fileInput.click();
 
-  reader.readAsDataURL(file);
+uploadBox.ondragover = e=>{
+e.preventDefault();
+uploadBox.style.background="#e6f2ff";
+};
+
+uploadBox.ondrop = e=>{
+e.preventDefault();
+fileInput.files = e.dataTransfer.files;
+handleFile();
+};
+
+fileInput.onchange = handleFile;
+
+async function handleFile(){
+const file = fileInput.files[0];
+if(!file) return;
+
+preview.src = URL.createObjectURL(file);
+preview.style.display="block";
+
+const fd = new FormData();
+fd.append("UPLOADCARE_PUB_KEY","492ad76c8d4cd40b9428");
+fd.append("file",file);
+
+uploadBox.innerHTML="⏳ جاري الرفع...";
+
+const res = await fetch("https://upload.uploadcare.com/base/",{
+method:"POST",body:fd
 });
 
-/* =========================
-   Submit
-========================= */
-document.getElementById("form").addEventListener("submit", async (e)=>{
-  e.preventDefault();
+const data = await res.json();
+imageUrl = "https://ucarecdn.com/"+data.file+"/";
 
-  const btn = document.getElementById("submitBtn");
-  btn.disabled = true;
-  btn.innerText = "جاري النشر...";
+uploadBox.innerHTML="✅ تم رفع الصورة";
+}
 
-  try{
+/* ===== نشر ===== */
+form.onsubmit = async(e)=>{
+e.preventDefault();
 
-    const name = document.getElementById("name").value;
-    const place = document.getElementById("place").value;
-    const comment = document.getElementById("comment").value;
-    const rating = document.getElementById("rating").value;
-    const file = document.getElementById("file").files[0];
+if(!imageUrl){alert("ارفع صورة");return;}
 
-    const fileName = Date.now()+"-"+file.name;
-
-    const { error: uploadError } = await client.storage
-      .from("experiences")
-      .upload(fileName, file);
-
-    if(uploadError) throw uploadError;
-
-    const { data } = client.storage
-      .from("experiences")
-      .getPublicUrl(fileName);
-
-    const image_url = data.publicUrl;
-
-    const { error: dbError } = await client
-      .from("experiences")
-      .insert([{
-        user_name: name,
-        place,
-        rating,
-        comment,
-        image_url
-      }]);
-
-    if(dbError) throw dbError;
-
-    addCard(name, place, comment, rating, image_url);
-
-    alert("✅ تم النشر بنجاح");
-
-    document.getElementById("form").reset();
-    document.getElementById("preview").style.display="none";
-
-    closeModal();
-
-  }catch(err){
-    console.error(err);
-    alert("❌ " + err.message);
-  }
-
-  btn.disabled = false;
-  btn.innerText = "نشر";
+await fetch("https://formspree.io/f/xaqajwvd",{
+method:"POST",
+headers:{Accept:"application/json"},
+body:new URLSearchParams({
+name:name.value,
+place:place.value,
+comment:comment.value,
+image:imageUrl
+})
 });
 
-/* =========================
-   UI
-========================= */
-function addCard(name, place, comment, rating, image){
-  const card = document.createElement("div");
-  card.className="card";
+gallery.innerHTML += `
+<div class="gallery-card">
+<img src="${imageUrl}">
+<div class="card-content">
+<h4>${place.value}</h4>
+<p>${comment.value}</p>
+<span>${name.value}</span>
+</div>
+</div>`;
 
-  card.innerHTML = `
-    <img src="${image}">
-    <div>
-      <h4>${place}</h4>
-      <p>${comment}</p>
-      <div>${rating}</div>
-      <span>— ${name}</span>
-    </div>
-  `;
-
-  document.getElementById("gallery").prepend(card);
-}
-
-/* =========================
-   Load Data
-========================= */
-async function loadData(){
-  const { data } = await client
-    .from("experiences")
-    .select("*")
-    .order("id", { ascending:false });
-
-  if(!data) return;
-
-  data.forEach(item=>{
-    addCard(
-      item.user_name,
-      item.place,
-      item.comment,
-      item.rating,
-      item.image_url
-    );
-  });
-}
-
-loadData();
+form.reset();
+preview.style.display="none";
+uploadBox.innerHTML="اضغط أو اسحب صورة هنا";
+imageUrl="";
+modal.style.display="none";
+};
 
 </script>
 
