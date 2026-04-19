@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>سفراء الزمن - مشاركة التجارب</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<!-- ✅ Uploadcare Widget v3.x -->
+<script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js"></script>
+<script>
+  UPLOADCARE_PUBLIC_KEY = "492ad76c8d4cd40b9428";
+  UPLOADCARE_EFFECTS = "crop,mask,filter";
+  UPLOADCARE_TABS = "file camera url facebook gdrive";
+  
+  // تهيئة متقدمة لـ Uploadcare
+  uploadcare.registerTab('preview', uploadcare.tabEffects);
+  uploadcare.registerTab('transform', uploadcare.tabTransform);
+</script>
+
+<style>
+  :root {
+    --primary: #0b5ed7;
+    --primary-dark: #0a4db3;
+    --success: #198754;
+    --danger: #dc3545;
+    --warning: #ffc107;
+    --light: #f8f9fa;
+    --dark: #1a1a2e;
+    --gray: #6c757d;
+    --shadow: 0 8px 30px rgba(0,0,0,.12);
+    --radius: 16px;
+  }
+  
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body {
+    font-family: 'Cairo', sans-serif;
+    background: linear-gradient(135deg, #f5f7fb 0%, #e4e8f0 100%);
+    color: var(--dark);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  
+  .nav {
+    background: #fff;
+    padding: 15px 20px;
+    text-align: center;
+    box-shadow: 0 2px 15px rgba(0,0,0,.08);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav b { font-size: 1.3rem; color: var(--primary); }
+  
+  .container { max-width: 1200px; margin: auto; padding: 20px; }
+  
+  .section-header {
+    text-align: center;
+    margin: 30px 0;
+  }
+  .section-header h2 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    color: var(--dark);
+  }
+  .section-header p { color: var(--gray); }
+  
+  .btn {
+    background: var(--primary);
+    color: #fff;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all .3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn:hover { background: var(--primary-dark); transform: translateY(-2px); }
+  .btn:disabled { 
+    background: var(--gray); 
+    cursor: not-allowed; 
+    transform: none;
+    opacity: .7;
+  }
+  .btn-outline {
+    background: transparent;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+  }
+  .btn-outline:hover { background: var(--primary); color: #fff; }
+  
+  .btn-success { background: var(--success); }
+  .btn-success:hover { background: #157347; }
+  
+  .btn-danger { background: var(--danger); }
+  .btn-danger:hover { background: #bb2d3b; }
+  
+  /* Grid System */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 22px;
+    margin-top: 20px;
+  }
+  
+  /* Cards */
+  .card {
+    background: #fff;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: transform .3s ease, box-shadow .3s ease;
+    animation: fadeIn .4s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 40px rgba(0,0,0,.18);
+  }
+  .card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    display: block;
+    background: #f1f3f5;
+  }
+  .card-body { padding: 18px; }
+  .card-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--dark);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .card-text { color: #555; font-size: .95rem; margin: 6px 0; }
+  .card-rating { font-size: 1.4rem; margin: 8px 0; }
+  .card-author {
+    display: block;
+    margin-top: 12px;
+    color: var(--primary);
+    font-weight: 600;
+    font-size: .95rem;
+  }
+  .card-date {
+    font-size: .8rem;
+    color: var(--gray);
+    margin-top: 4px;
+  }
+  
+  /* Modal */
+  .modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.75);
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+    animation: fadeOverlay .2s ease;
+  }
+  @keyframes fadeOverlay {
+    from { opacity: 0; } to { opacity: 1; }
+  }
+  .modal.show { display: flex; }
+  
+  .modal-content {
+    background: #fff;
+    padding: 28px;
+    border-radius: var(--radius);
+    width: 100%;
+    max-width: 480px;
+    position: relative;
+    animation: slideUp .3s ease;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  
+  .modal-close {
+    position: absolute;
+    left: 20px;
+    top: 18px;
+    font-size: 1.6rem;
+    cursor: pointer;
+    color: var(--gray);
+    transition: color .2s;
+    background: none;
+    border: none;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+  .modal-close:hover {
+    color: var(--danger);
+    background: #ffebee;
+  }
+  
+  .modal-title {
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    color: var(--dark);
+  }
+  
+  /* Form Styles */
+  .form-group { margin-bottom: 16px; }
+  .form-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--dark);
+  }
+  .form-label .required { color: var(--danger); margin-right: 3px; }
+  
+  .form-control {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e0e4ec;
+    border-radius: 12px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 1rem;
+    transition: border-color .2s, box-shadow .2s;
+    background: #fff;
+  }
+  .form-control:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(11,94,215,.15);
+  }
+  .form-control.is-invalid {
+    border-color: var(--danger);
+  }
+  .form-control.is-valid {
+    border-color: var(--success);
+  }
+  
+  .form-text {
+    font-size: .85rem;
+    color: var(--gray);
+    margin-top: 6px;
+  }
+  .form-text.error { color: var(--danger); }
+  .form-text.success { color: var(--success); }
+  
+  textarea.form-control {
+    min-height: 100px;
+    resize: vertical;
+  }
+  
+  select.form-control {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%236c757d' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: left 12px center;
+    background-size: 14px 10px;
+    padding-right: 35px;
+  }
+  
+  /* Uploadcare Customization */
+  .uploadcare--widget {
+    width: 100%;
+    margin-top: 8px;
+  }
+  .uploadcare--widget__button {
+    background: var(--primary) !important;
+    border-radius: 10px !important;
+    font-family: 'Cairo', sans-serif !important;
+  }
+  .uploadcare--status {
+    margin-top: 10px;
+    border-radius: 10px !important;
+  }
+  
+  /* Alert Messages */
+  .alert {
+    padding: 14px 18px;
+    border-radius: 12px;
+    margin: 15px 0;
+    font-size: .95rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: slideIn .3s ease;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  .alert-success {
+    background: #d1e7dd;
+    color: #0f5132;
+    border: 1px solid #badbcc;
+  }
+  .alert-danger {
+    background: #f8d7da;
+    color: #842029;
+    border: 1px solid #f5c2c7;
+  }
+  .alert-warning {
+    background: #fff3cd;
+    color: #664d03;
+    border: 1px solid #ffecb5;
+  }
+  .alert-info {
+    background: #cff4fc;
+    color: #055160;
+    border: 1px solid #b6effb;
+  }
+  
+  /* Loading Spinner */
+  .spinner {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin .8s linear infinite;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  .btn .spinner {
+    width: 16px;
+    height: 16px;
+    border-width: 2px;
+    margin: 0 8px 0 0;
+  }
+  
+  /* Empty State */
+  .empty-state {
+    text-align: center;
+    padding: 50px 20px;
+    color: var(--gray);
+  }
+  .empty-state svg {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 15px;
+    opacity: .5;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .nav b { font-size: 1.1rem; }
+    .section-header h2 { font-size: 1.5rem; }
+    .modal-content { padding: 22px; }
+    .grid { grid-template-columns: 1fr; }
+  }
+  
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: #f1f1f1; }
+  ::-webkit-scrollbar-thumb { 
+    background: #c1c9d6; 
+    border-radius: 4px; 
+  }
+  ::-webkit-scrollbar-thumb:hover { background: #a0a8b8; }
+</style>
+</head>
+
+<body>
+
+<!-- Navigation -->
+<nav class="nav">
+  <b>🕰️ سفراء الزمن</b>
+</nav>
+
+<!-- Main Content -->
+<div class="container">
+  
+  <section class="section-header">
+    <h2>✨ تجارب الزوار</h2>
+    <p>شاركنا لحظاتك الجميلة واقرأ تجارب الآخرين</p>
+  </section>
+  
+  <div style="text-align: center; margin-bottom: 25px;">
+    <button class="btn" onclick="App.openModal()">
+      📤 شارك تجربتك الآن
+    </button>
+  </div>
+  
+  <!-- Gallery Grid -->
+  <div id="gallery" class="grid">
+    <!-- سيتم إضافة البطاقات هنا ديناميكياً -->
+    <div class="empty-state" id="emptyState">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+      </svg>
+      <p>لا توجد تجارب حتى الآن.<br>كن أول من يشارك!</p>
+    </div>
+  </div>
+  
+</div>
+
+<!-- Modal Form -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="App.closeModal()" aria-label="إغلاق">❌</button>
+    
+    <h3 class="modal-title">📝 مشاركة تجربة جديدة</h3>
+    
+    <!-- ✅ Netlify Form with proper attributes -->
+    <form id="feedbackForm" 
+          name="visitor-feedback" 
+          method="POST" 
+          data-netlify="true"
+          netlify-honeypot="bot-field"
+          novalidate>
+      
+      <!-- Hidden fields for Netlify -->
+      <input type="hidden" name="form-name" value="visitor-feedback">
+      <p style="display:none">
+        <label>لا تملأ هذا الحقل: <input name="bot-field"></label>
+      </p>
+      
+      <!-- Name Field -->
+      <div class="form-group">
+        <label class="form-label" for="userName">
+          <span class="required">*</span> اسمك الكريم
+        </label>
+        <input type="text" 
+               id="userName" 
+               name="user_name" 
+               class="form-control" 
+               placeholder="أدخل اسمك"
+               required 
+               minlength="2" 
+               maxlength="50"
+               pattern="^[\u0600-\u06FFa-zA-Z\s\u0660-\u0669]+$">
+        <div class="form-text" id="nameError"></div>
+      </div>
+      
+      <!-- Place Field -->
+      <div class="form-group">
+        <label class="form-label" for="placeName">
+          <span class="required">*</span> المكان الذي زرته
+        </label>
+        <input type="text" 
+               id="placeName" 
+               name="place" 
+               class="form-control" 
+               placeholder="مثال: متحف القاهرة، جبل النور..."
+               required 
+               minlength="3" 
+               maxlength="100">
+        <div class="form-text" id="placeError"></div>
+      </div>
+      
+      <!-- Uploadcare Image Upload -->
+      <div class="form-group">
+        <label class="form-label">
+          <span class="required">*</span> أضف صورة لتجربتك
+        </label>
+        <input type="hidden" 
+               id="uploadcareInput"
+               role="uploadcare-uploader"
+               data-clearable
+               data-images-only
+               data-preview-step
+               data-crop="1:1"
+               data-multiple="false"
+               data-image-shrink="true"
+               data-source-list="local camera url"
+               required>
+        <div class="form-text" id="imageError"></div>
+        <div class="form-text success" id="imageSuccess" style="display:none">
+          ✅ تم رفع الصورة بنجاح
+        </div>
+      </div>
+      
+      <!-- Rating Field -->
+      <div class="form-group">
+        <label class="form-label" for="rating">
+          <span class="required">*</span> تقييمك للتجربة
+        </label>
+        <select id="rating" name="rating" class="form-control" required>
+          <option value="">اختر التقييم ⭐</option>
+          <option value="⭐">⭐ - عادي</option>
+          <option value="⭐⭐">⭐⭐ - جيد</option>
+          <option value="⭐⭐⭐">⭐⭐⭐ - جيد جداً</option>
+          <option value="⭐⭐⭐⭐">⭐⭐⭐⭐ - ممتاز</option>
+          <option value="⭐⭐⭐⭐⭐">⭐⭐⭐⭐⭐ - استثنائي</option>
+        </select>
+        <div class="form-text" id="ratingError"></div>
+      </div>
+      
+      <!-- Comment Field -->
+      <div class="form-group">
+        <label class="form-label" for="comment">
+          <span class="required">*</span> تفاصيل تجربتك
+        </label>
+        <textarea id="comment" 
+                  name="comment" 
+                  class="form-control" 
+                  placeholder="اكتب لنا عن تجربتك... ما الذي أعجبك؟ ما النصيحة التي تقدمها للزوار؟"
+                  required 
+                  minlength="20" 
+                  maxlength="500"></textarea>
+        <div class="form-text" id="commentError"></div>
+        <div class="form-text" style="text-align: left;">
+          <span id="charCount">0</span>/500 حرف
+        </div>
+      </div>
+      
+      <!-- Alert Container -->
+      <div id="formAlert"></div>
+      
+      <!-- Submit Button -->
+      <button type="submit" class="btn btn-success" style="width:100%; margin-top:10px;" id="submitBtn">
+        🚀 نشر التجربة
+      </button>
+      
+      <p style="text-align:center; margin-top:15px; font-size:.9rem; color:var(--gray);">
+        🔒 بياناتك محمية • الصور تُخزن بشكل آمن
+      </p>
+      
+    </form>
+  </div>
+</div>
+
+<!-- ✅ JavaScript Module Pattern for Better Error Handling -->
+<script>
+/**
+ * 🎯 تطبيق سفراء الزمن - إصدار محسّن مع معالجة أخطاء احترافية
+ * @version 2.0.0
+ * @author محترف البرمجة
+ */
+const App = (function() {
+  'use strict';
+  
+  // 🔧 إعدادات التطبيق
+  const CONFIG = {
+    UPLOADCARE_KEY: "492ad76c8d4cd40b9428",
+    FORM_ENDPOINT: "/", // Netlify form endpoint
+    MAX_FILE_SIZE: 10 * 1024 * 1024, // 10MB
+    ALLOWED_TYPES: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
+    MIN_COMMENT_LENGTH: 20,
+    MAX_COMMENT_LENGTH: 500,
+    TOAST_DURATION: 4000
+  };
+  
+  // 📦 حالة التطبيق
+  const state = {
+    isSubmitting: false,
+    uploadedImageUrl: null,
+    validationErrors: {}
+  };
+  
+  // 🎭 عناصر DOM
+  const elements = {};
+  
+  // 🚀 تهيئة التطبيق
+  function init() {
+    cacheElements();
+    setupEventListeners();
+    setupUploadcare();
+    setupFormValidation();
+    loadSavedExperiences();
+    console.log('✅ تم تهيئة تطبيق سفراء الزمن بنجاح');
+  }
+  
+  // 🗄️ تخزين عناصر DOM في الذاكرة لتحسين الأداء
+  function cacheElements() {
+    elements.modal = document.getElementById('modal');
+    elements.form = document.getElementById('feedbackForm');
+    elements.gallery = document.getElementById('gallery');
+    elements.emptyState = document.getElementById('emptyState');
+    elements.submitBtn = document.getElementById('submitBtn');
+    elements.formAlert = document.getElementById('formAlert');
+    elements.uploadcareInput = document.getElementById('uploadcareInput');
+    elements.comment = document.getElementById('comment');
+    elements.charCount = document.getElementById('charCount');
+  }
+  
+  // 🎧 إعداد مستمعي الأحداث
+  function setupEventListeners() {
+    // إغلاق النافذة عند النقر خارج المحتوى
+    elements.modal?.addEventListener('click', (e) => {
+      if (e.target === elements.modal) closeModal();
+    });
+    
+    // إغلاق النافذة بمفتاح Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && elements.modal?.classList.contains('show')) {
+        closeModal();
+      }
+    });
+    
+    // عدّاد الأحكام للتعليق
+    elements.comment?.addEventListener('input', (e) => {
+      const length = e.target.value.length;
+      if (elements.charCount) {
+        elements.charCount.textContent = length;
+      }
+      // تنبيه عند الاقتراب من الحد الأقصى
+      if (length > CONFIG.MAX_COMMENT_LENGTH - 10) {
+        elements.charCount.style.color = 'var(--warning)';
+      } else {
+        elements.charCount.style.color = 'inherit';
+      }
+    });
+    
+    // إرسال النموذج
+    elements.form?.addEventListener('submit', handleFormSubmit);
+  }
+  
+  // ⚙️ إعداد Uploadcare مع معالجة الأخطاء
+  function setupUploadcare() {
+    if (!window.uploadcare) {
+      showError('⚠️ لم يتم تحميل مكتبة Uploadcare، يرجى التحقق من اتصال الإنترنت');
+      return;
+    }
+    
+    try {
+      const widget = uploadcare.Widget('#uploadcareInput');
+      
+      // ✅ مراقبة حالة الرفع
+      widget.onChange((file) => {
+        if (!file) {
+          state.uploadedImageUrl = null;
+          hideElement('imageSuccess');
+          setFieldError('image', 'يرجى اختيار صورة');
+          return;
+        }
+        
+        // عرض حالة التقدم
+        showInfo('📤 جاري رفع الصورة...');
+        
+        // ✅ انتظار اكتمال الرفع بشكل صحيح
+        file.progress((progress) => {
+          // يمكن إضافة شريط تقدم هنا إذا لزم الأمر
+        });
+        
+        file.done((fileInfo) => {
+          console.log('✅ تم رفع الصورة:', fileInfo);
+          state.uploadedImageUrl = fileInfo.cdnUrl;
+          hideElement('imageError');
+          showElement('imageSuccess');
+          clearFieldError('image');
+          showSuccess('✅ تم رفع الصورة بنجاح!');
+        });
+        
+        file.fail((error) => {
+          console.error('❌ فشل رفع الصورة:', error);
+          state.uploadedImageUrl = null;
+          hideElement('imageSuccess');
+          
+          // معالجة أنواع الأخطاء المختلفة
+          let errorMessage = '❌ فشل رفع الصورة';
+          if (error.errorCode === 'FileSize') {
+            errorMessage = '❌ حجم الصورة كبير جداً (الحد الأقصى 10 ميجابايت)';
+          } else if (error.errorCode === 'FileType') {
+            errorMessage = '❌ نوع الملف غير مدعوم (استخدم JPG, PNG, WebP, GIF)';
+          } else if (error.errorCode === 'Network') {
+            errorMessage = '❌ خطأ في الشبكة، يرجى التحقق من اتصال الإنترنت';
+          } else if (error.errorCode === 'UserRejected') {
+            errorMessage = '⚠️ تم إلغاء عملية الرفع';
+          }
+          
+          setFieldError('image', errorMessage);
+          showError(errorMessage);
+        });
+        
+      });
+      
+    } catch (error) {
+      console.error('❌ خطأ في تهيئة Uploadcare:', error);
+      showError('⚠️ تعذر تهيئة أداة رفع الصور');
+    }
+  }
+  
+  // ✅ التحقق من صحة النموذج في الوقت الفعلي
+  function setupFormValidation() {
+    const fields = ['userName', 'placeName', 'rating', 'comment'];
+    
+    fields.forEach(fieldId => {
+      const field = document.getElementById(fieldId);
+      if (!field) return;
+      
+      // التحقق عند فقدان التركيز
+      field.addEventListener('blur', () => validateField(fieldId));
+      
+      // إزالة الخطأ عند الكتابة
+      field.addEventListener('input', () => {
+        if (state.validationErrors[fieldId]) {
+          clearFieldError(fieldId);
+        }
+      });
+    });
+  }
+  
+  // 🔍 التحقق من حقل واحد
+  function validateField(fieldId) {
+    const field = document.getElementById(fieldId);
+    if (!field) return true;
+    
+    const value = field.value.trim();
+    let isValid = true;
+    let errorMessage = '';
+    
+    switch(fieldId) {
+      case 'userName':
+        if (!value) {
+          errorMessage = 'يرجى إدخال اسمك';
+          isValid = false;
+        } else if (value.length < 2) {
+          errorMessage = 'الاسم يجب أن يكون حرفين على الأقل';
+          isValid = false;
+        } else if (!/^[\u0600-\u06FFa-zA-Z\s\u0660-\u0669]+$/.test(value)) {
+          errorMessage = 'يرجى استخدام أحرف عربية أو إنجليزية فقط';
+          isValid = false;
+        }
+        break;
+        
+      case 'placeName':
+        if (!value) {
+          errorMessage = 'يرجى إدخال اسم المكان';
+          isValid = false;
+        } else if (value.length < 3) {
+          errorMessage = 'اسم المكان يجب أن يكون 3 أحرف على الأقل';
+          isValid = false;
+        }
+        break;
+        
+      case 'rating':
+        if (!value) {
+          errorMessage = 'يرجى اختيار تقييم';
+          isValid = false;
+        }
+        break;
+        
+      case 'comment':
+        if (!value) {
+          errorMessage = 'يرجى كتابة تفاصيل تجربتك';
+          isValid = false;
+        } else if (value.length < CONFIG.MIN_COMMENT_LENGTH) {
+          errorMessage = `التعليق يجب أن يكون ${CONFIG.MIN_COMMENT_LENGTH} حرفاً على الأقل`;
+          isValid = false;
+        } else if (value.length > CONFIG.MAX_COMMENT_LENGTH) {
+          errorMessage = `التعليق لا يجب أن يتجاوز ${CONFIG.MAX_COMMENT_LENGTH} حرفاً`;
+          isValid = false;
+        }
+        break;
+        
+      case 'image':
+        if (!state.uploadedImageUrl) {
+          errorMessage = 'يرجى رفع صورة لتجربتك';
+          isValid = false;
+        }
+        break;
+    }
+    
+    if (!isValid) {
+      setFieldError(fieldId, errorMessage);
+      state.validationErrors[fieldId] = errorMessage;
+    } else {
+      clearFieldError(fieldId);
+      delete state.validationErrors[fieldId];
+    }
+    
+    return isValid;
+  }
+  
+  // ✏️ تعيين رسالة خطأ للحقل
+  function setFieldError(fieldId, message) {
+    const field = document.getElementById(fieldId);
+    const errorEl = document.getElementById(`${fieldId}Error`);
+    
+    if (field) {
+      field.classList.add('is-invalid');
+      field.classList.remove('is-valid');
+    }
+    if (errorEl) {
+      errorEl.textContent = message;
+      errorEl.className = 'form-text error';
+      errorEl.style.display = 'block';
+    }
+  }
+  
+  // 🗑️ مسح رسالة الخطأ
+  function clearFieldError(fieldId) {
+    const field = document.getElementById(fieldId);
+    const errorEl = document.getElementById(`${fieldId}Error`);
+    
+    if (field) {
+      field.classList.remove('is-invalid');
+      field.classList.add('is-valid');
+    }
+    if (errorEl) {
+      errorEl.textContent = '';
+      errorEl.style.display = 'none';
+    }
+  }
+  
+  // 🎯 معالجة إرسال النموذج
+  async function handleFormSubmit(e) {
+    e.preventDefault();
+    
+    // منع الإرسال المتكرر
+    if (state.isSubmitting) {
+      console.warn('⚠️ النموذج قيد المعالجة بالفعل');
+      return;
+    }
+    
+    // ✅ التحقق من جميع الحقول
+    const fields = ['userName', 'placeName', 'rating', 'comment', 'image'];
+    let allValid = true;
+    
+    fields.forEach(fieldId => {
+      if (!validateField(fieldId)) {
+        allValid = false;
+      }
+    });
+    
+    if (!allValid) {
+      showError('⚠️ يرجى تصحيح الأخطاء في النموذج قبل الإرسال');
+      // التركيز على أول حقل به خطأ
+      const firstError = document.querySelector('.is-invalid');
+      firstError?.focus();
+      return;
+    }
+    
+    // 🔒 بدء عملية الإرسال
+    state.isSubmitting = true;
+    setLoadingState(true);
+    clearAlert();
+    
+    try {
+      // 📦 تجهيز البيانات
+      const formData = {
+        'form-name': 'visitor-feedback',
+        'user_name': document.getElementById('userName').value.trim(),
+        'place': document.getElementById('placeName').value.trim(),
+        'comment': document.getElementById('comment').value.trim(),
+        'rating': document.getElementById('rating').value,
+        'image': state.uploadedImageUrl,
+        'timestamp': new Date().toISOString(),
+        'user_agent': navigator.userAgent
+      };
+      
+      console.log('📤 جاري إرسال البيانات...', formData);
+      
+      // 🌐 إرسال إلى Netlify باستخدام Fetch
+      const response = await fetch(CONFIG.FORM_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': 'application/json'
+        },
+        body: new URLSearchParams(formData),
+        // مهلة زمنية للطلب
+        signal: AbortSignal.timeout(30000) // 30 ثانية
+      });
+      
+      // ✅ التحقق من استجابة الخادم
+      if (!response.ok) {
+        const errorText = await response.text().catch(() => 'خطأ غير معروف');
+        throw new Error(`خادم Netlify أرجع حالة ${response.status}: ${errorText}`);
+      }
+      
+      // 🎉 نجاح الإرسال
+      console.log('✅ تم إرسال النموذج بنجاح');
+      
+      // إضافة التجربة للمعرض فوراً
+      addCardToGallery({
+        name: formData.user_name,
+        place: formData.place,
+        comment: formData.comment,
+        rating: formData.rating,
+        image: formData.image,
+        date: new Date().toLocaleDateString('ar-SA')
+      });
+      
+      // حفظ في التخزين المحلي كنسخة احتياطية
+      saveExperienceToLocal(formData);
+      
+      // إظهار رسالة النجاح
+      showSuccess('🎉 تم نشر تجربتك بنجاح! شكراً لمشاركتك ✨');
+      
+      // إعادة تعيين النموذج
+      resetForm();
+      
+      // إغلاق النافذة بعد تأخير بسيط
+      setTimeout(() => {
+        closeModal();
+      }, 1500);
+      
+    } catch (error) {
+      // ❌ معالجة الأخطاء
+      console.error('❌ خطأ في إرسال النموذج:', error);
+      
+      let userMessage = '❌ حدث خطأ غير متوقع';
+      
+      if (error.name === 'AbortError') {
+        userMessage = '⏰ انتهت مهلة الاتصال، يرجى التحقق من الإنترنت والمحاولة مرة أخرى';
+      } else if (error.message.includes('NetworkError') || error.message.includes('Failed to fetch')) {
+        userMessage = '🌐 خطأ في الشبكة، يرجى التحقق من اتصال الإنترنت';
+      } else if (error.message.includes('403')) {
+        userMessage = '🔐 تم رفض الطلب، يرجى التحقق من إعدادات النموذج';
+      } else if (error.message.includes('422')) {
+        userMessage = '📋 بيانات غير صالحة، يرجى مراجعة المدخلات';
+      }
+      
+      showError(userMessage);
+      
+      // حفظ البيانات محلياً كمحاولة استرداد
+      saveFormDataForRecovery();
+      
+    } finally {
+      // 🔓 إنهاء حالة التحميل
+      state.isSubmitting = false;
+      setLoadingState(false);
+    }
+  }
+  
+  // 🎴 إضافة بطاقة للمعرض
+  function addCardToGallery(data) {
+    // إخفاء حالة "لا توجد تجارب"
+    if (elements.emptyState) {
+      elements.emptyState.style.display = 'none';
+    }
+    
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.setAttribute('data-timestamp', data.date);
+    
+    // صورة افتراضية في حال عدم وجود صورة
+    const imageUrl = data.image || 'https://via.placeholder.com/300x200/0b5ed7/ffffff?text=سفراء+الزمن';
+    
+    card.innerHTML = `
+      <img src="${imageUrl}" 
+           alt="${escapeHtml(data.place)}" 
+           loading="lazy"
+           onerror="this.src='https://via.placeholder.com/300x200?text=صورة+غير+متوفرة'">
+      <div class="card-body">
+        <h4 class="card-title">📍 ${escapeHtml(data.place)}</h4>
+        <p class="card-text">${escapeHtml(data.comment)}</p>
+        <div class="card-rating">${data.rating}</div>
+        <span class="card-author">✍️ ${escapeHtml(data.name)}</span>
+        ${data.date ? `<small class="card-date">📅 ${data.date}</small>` : ''}
+      </div>
+    `;
+    
+    // إضافة في بداية المعرض مع تأثير
+    if (elements.gallery.firstChild) {
+      elements.gallery.insertBefore(card, elements.gallery.firstChild);
+    } else {
+      elements.gallery.appendChild(card);
+    }
+    
+    console.log('🎴 تمت إضافة بطاقة جديدة للمعرض');
+  }
+  
+  // 🔐 دالة أمان: منع هجمات XSS
+  function escapeHtml(text) {
+    const map = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#039;'
+    };
+    return String(text).replace(/[&<>"']/g, m => map[m]);
+  }
+  
+  // 💾 حفظ التجربة في التخزين المحلي (نسخة احتياطية)
+  function saveExperienceToLocal(data) {
+    try {
+      const key = 'ambassadors_experiences';
+      const existing = JSON.parse(localStorage.getItem(key) || '[]');
+      existing.unshift({ ...data, id: Date.now() });
+      // الاحتفاظ بآخر 50 تجربة فقط
+      localStorage.setItem(key, JSON.stringify(existing.slice(0, 50)));
+      console.log('💾 تم حفظ التجربة محلياً');
+    } catch (e) {
+      console.warn('⚠️ فشل الحفظ المحلي:', e);
+    }
+  }
+  
+  // 🔄 تحميل التجارب المحفوظة محلياً عند البدء
+  function loadSavedExperiences() {
+    try {
+      const key = 'ambassadors_experiences';
+      const saved = JSON.parse(localStorage.getItem(key) || '[]');
+      
+      if (saved.length > 0) {
+        // إخفاء حالة الفراغ
+        if (elements.emptyState) {
+          elements.emptyState.style.display = 'none';
+        }
+        
+        // إضافة كل تجربة محفوظة
+        saved.forEach(exp => {
+          addCardToGallery({
+            name: exp.user_name,
+            place: exp.place,
+            comment: exp.comment,
+            rating: exp.rating,
+            image: exp.image,
+            date: exp.timestamp ? new Date(exp.timestamp).toLocaleDateString('ar-SA') : null
+          });
+        });
+        console.log(`🔄 تم تحميل ${saved.length} تجربة محفوظة`);
+      }
+    } catch (e) {
+      console.warn('⚠️ فشل تحميل التجارب المحفوظة:', e);
+    }
+  }
+  
+  // 🆘 حفظ بيانات النموذج للاسترداد في حال الفشل
+  function saveFormDataForRecovery() {
+    try {
+      const recoveryData = {
+        user_name: document.getElementById('userName')?.value,
+        place: document.getElementById('placeName')?.value,
+        comment: document.getElementById('comment')?.value,
+        rating: document.getElementById('rating')?.value,
+        image: state.uploadedImageUrl,
+        savedAt: new Date().toISOString()
+      };
+      localStorage.setItem('form_recovery', JSON.stringify(recoveryData));
+      console.log('🆘 تم حفظ بيانات النموذج للاسترداد');
+    } catch (e) {
+      console.warn('⚠️ فشل حفظ بيانات الاسترداد:', e);
+    }
+  }
+  
+  // 🔄 استعادة بيانات النموذج المحفوظة
+  function restoreFormData() {
+    try {
+      const saved = localStorage.getItem('form_recovery');
+      if (!saved) return false;
+      
+      const data = JSON.parse(saved);
+      // استعادة البيانات إذا كانت حديثة (أقل من ساعة)
+      const age = Date.now() - new Date(data.savedAt).getTime();
+      if (age > 3600000) { // ساعة واحدة
+        localStorage.removeItem('form_recovery');
+        return false;
+      }
+      
+      if (data.user_name) document.getElementById('userName').value = data.user_name;
+      if (data.place) document.getElementById('placeName').value = data.place;
+      if (data.comment) document.getElementById('comment').value = data.comment;
+      if (data.rating) document.getElementById('rating').value = data.rating;
+      
+      console.log('🔄 تم استعادة بيانات النموذج');
+      return true;
+    } catch (e) {
+      console.warn('⚠️ فشل استعادة البيانات:', e);
+      return false;
+    }
+  }
+  
+  // 🎛️ إدارة حالة التحميل للزر
+  function setLoadingState(loading) {
+    if (!elements.submitBtn) return;
+    
+    if (loading) {
+      elements.submitBtn.disabled = true;
+      elements.submitBtn.innerHTML = '<span class="spinner"></span> جاري النشر...';
+    } else {
+      elements.submitBtn.disabled = false;
+      elements.submitBtn.innerHTML = '🚀 نشر التجربة';
+    }
+  }
+  
+  // 🔔 نظام التنبيهات
+  function showAlert(message, type = 'info', duration = CONFIG.TOAST_DURATION) {
+    if (!elements.formAlert) return;
+    
+    const alertTypes = {
+      success: 'alert-success',
+      error: 'alert-danger',
+      warning: 'alert-warning',
+      info: 'alert-info'
+    };
+    
+    const icons = {
+      success: '✅',
+      error: '❌',
+      warning: '⚠️',
+      info: 'ℹ️'
+    };
+    
+    elements.formAlert.innerHTML = `
+      <div class="alert ${alertTypes[type] || alertTypes.info}" role="alert">
+        <strong>${icons[type] || icons.info}</strong> ${escapeHtml(message)}
+      </div>
+    `;
+    
+    // إخفاء تلقائي بعد المدة المحددة
+    if (duration > 0) {
+      setTimeout(() => {
+        if (elements.formAlert?.firstChild) {
+          elements.formAlert.firstChild.style.opacity = '0';
+          setTimeout(() => clearAlert(), 300);
+        }
+      }, duration);
+    }
+  }
+  
+  function showSuccess(msg) { showAlert(msg, 'success'); }
+  function showError(msg) { showAlert(msg, 'error', 6000); }
+  function showWarning(msg) { showAlert(msg, 'warning'); }
+  function showInfo(msg) { showAlert(msg, 'info', 3000); }
+  
+  function clearAlert() {
+    if (elements.formAlert) {
+      elements.formAlert.innerHTML = '';
+    }
+  }
+  
+  // 👁️ وظائف مساعدة للعناصر
+  function showElement(id) {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'block';
+  }
+  
+  function hideElement(id) {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  }
+  
+  // 🔄 إعادة تعيين النموذج
+  function resetForm() {
+    if (elements.form) {
+      elements.form.reset();
+      // إعادة تعيين Uploadcare
+      const widget = uploadcare.Widget('#uploadcareInput');
+      if (widget) widget.value(null);
+    }
+    
+    // مسح الحالات
+    state.validationErrors = {};
+    state.uploadedImageUrl = null;
+    
+    // إزالة فئات التحقق
+    document.querySelectorAll('.form-control').forEach(field => {
+      field.classList.remove('is-valid', 'is-invalid');
+    });
+    
+    // إخفاء رسائل الخطأ
+    document.querySelectorAll('.form-text.error').forEach(el => {
+      el.style.display = 'none';
+    });
+    
+    hideElement('imageSuccess');
+    clearAlert();
+    
+    // مسح بيانات الاسترداد
+    localStorage.removeItem('form_recovery');
+    
+    console.log('🔄 تم إعادة تعيين النموذج');
+  }
+  
+  // 🚪 فتح النافذة المنبثقة
+  function openModal() {
+    if (!elements.modal) return;
+    
+    // محاولة استعادة البيانات المحفوظة
+    restoreFormData();
+    
+    elements.modal.classList.add('show');
+    document.body.style.overflow = 'hidden'; // منع التمرير في الخلفية
+    
+    // التركيز على أول حقل
+    setTimeout(() => {
+      document.getElementById('userName')?.focus();
+    }, 300);
+    
+    console.log('🚪 تم فتح نافذة المشاركة');
+  }
+  
+  // 🚪 إغلاق النافذة المنبثقة
+  function closeModal() {
+    if (!elements.modal) return;
+    
+    elements.modal.classList.remove('show');
+    document.body.style.overflow = ''; // إعادة تمكين التمرير
+    
+    // إعادة تعيين النموذج عند الإغلاق
+    resetForm();
+    
+    console.log('🚪 تم إغلاق نافذة المشاركة');
+  }
+  
+  // 🎯 واجهة عامة للتطبيق
+  return {
+    init,
+    openModal,
+    closeModal,
+    // وظائف عامة للاستخدام الخارجي إذا لزم
+    validateField,
+    addCardToGallery
+  };
+  
+})();
+
+// 🚀 بدء التطبيق عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', () => {
+  // التأكد من تحميل Uploadcare أولاً
+  if (window.uploadcare) {
+    App.init();
+  } else {
+    console.warn('⏳ انتظار تحميل Uploadcare...');
+    window.addEventListener('uploadcare.load', () => App.init(), { once: true });
+    // مهلة احتياطية
+    setTimeout(() => {
+      if (!window.uploadcare) {
+        App.init(); // محاولة البدء حتى بدون المكتبة
+      }
+    }, 5000);
+  }
+});
+</script>
+
+</body>
+</html>
