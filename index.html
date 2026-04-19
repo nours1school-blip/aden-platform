@@ -161,7 +161,7 @@ font-size:20px;
 <div id="modal" class="modal">
 <div class="modal-content">
 
-<h3 style="text-align:center">📸 شارك تجربتك</h3>
+<h3 style="text-align:center"> شاركنا تجربتك </h3>
 
 <form id="form">
 <input type="text" id="name" placeholder="اسمك" required>
@@ -173,8 +173,7 @@ font-size:20px;
 <img id="preview">
 
 <textarea id="comment" placeholder="تعليقك" required></textarea>
-
-<button class="primary-btn">نشر</button>
+<button class="primary-btn" id="openBtn">إضافة تجربة</button>
 </form>
 
 </div>
@@ -187,11 +186,11 @@ font-size:20px;
 <div class="nearby-grid">
 <div class="nearby-item">
 <img src="https://source.unsplash.com/400x300/?park">
-<p>حديقة</p>
+<p>حديقة عدن</p>
 </div>
 <div class="nearby-item">
 <img src="https://source.unsplash.com/400x300/?mall">
-<p>مول</p>
+<p> عدن مول</p>
 </div>
 </div>
 </section>
@@ -224,7 +223,7 @@ font-size:20px;
 
 const supabase = window.supabase.createClient(
   "https://txqqfiphdsuedwcrvjjs.supabase.co",
-  "PUT_YOUR_ANON_KEY_HERE"
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR4cXFmaXBoZHN1ZWR3Y3J2ampzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY1OTIzOTQsImV4cCI6MjA5MjE2ODM5NH0.csgtDlFliEZzNgntm3IT99IEOXFjHTV3xqFP_3DJNWc"
 );
 
 /* عناصر */
