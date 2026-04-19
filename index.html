@@ -630,7 +630,90 @@ const App = (function() {
     // إرسال النموذج
     elements.form?.addEventListener('submit', handleFormSubmit);
   }
+
+
+  // ⚙️ إعداد Uploadcare مع معالجة الأخطاء
+function setupUploadcare() {
+  console.log('🔧 Setting up Uploadcare...');
+  console.log('window.uploadcare:', !!window.uploadcare);
+  console.log('UPLOADCARE_PUBLIC_KEY:', window.UPLOADCARE_PUBLIC_KEY);
+  console.log('Type of key:', typeof window.UPLOADCARE_PUBLIC_KEY);
   
+  if (!window.uploadcare) {
+    console.error('❌ Uploadcare library not loaded');
+    showError('⚠️ لم يتم تحميل مكتبة Uploadcare');
+    return;
+  }
+  
+  // ✅ التأكد من أن المفتاح نص
+  if (typeof window.UPLOADCARE_PUBLIC_KEY !== 'string') {
+    console.error('❌ Public key is not a string!');
+    window.UPLOADCARE_PUBLIC_KEY = String(window.UPLOADCARE_PUBLIC_KEY);
+  }
+  
+  const input = document.getElementById('uploadcareInput');
+  if (!input) {
+    console.error('❌ Uploadcare input not found');
+    return;
+  }
+  
+  try {
+    console.log('✅ Creating widget with input:', input);
+    console.log('Input attributes:', {
+      role: input.getAttribute('role'),
+      'data-public-key': input.getAttribute('data-public-key')
+    });
+    
+    // ✅ الطريقة الصحيحة: مرّر العنصر مباشرة
+    const widget = uploadcare.Widget(input);
+    
+    console.log('✅ Widget created:', widget);
+    
+    widget.onChange((file) => {
+      console.log('📁 File changed:', file ? 'Selected' : 'Cleared');
+      
+      if (!file) {
+        state.uploadedImageUrl = null;
+        hideElement('imageSuccess');
+        return;
+      }
+      
+      showInfo('📤 جاري رفع الصورة...');
+      
+      file.done((fileInfo) => {
+        console.log('✅ Upload success:', fileInfo.cdnUrl);
+        state.uploadedImageUrl = fileInfo.cdnUrl;
+        hideElement('imageError');
+        showElement('imageSuccess');
+        clearFieldError('image');
+        showSuccess('✅ تم رفع الصورة بنجاح!');
+      });
+      
+      file.fail((error) => {
+        console.error('❌ Upload failed:', error);
+        state.uploadedImageUrl = null;
+        hideElement('imageSuccess');
+        
+        let errorMsg = '❌ فشل رفع الصورة';
+        if (error.errorCode === 'FileSize') {
+          errorMsg = '❌ حجم الصورة كبير جداً (الحد الأقصى 10MB)';
+        } else if (error.errorCode === 'FileType') {
+          errorMsg = '❌ نوع الملف غير مدعوم';
+        } else if (error.errorCode === 'Network') {
+          errorMsg = '❌ خطأ في الشبكة';
+        }
+        
+        setFieldError('image', errorMsg);
+        showError(errorMsg);
+      });
+    });
+    
+  } catch (error) {
+    console.error('❌ Uploadcare init error:', error);
+    console.error('Error stack:', error.stack);
+    showError('⚠️ تعذر تهيئة أداة رفع الصور: ' + error.message);
+  }
+}
   
   // ✅ التحقق من صحة النموذج في الوقت الفعلي
   function setupFormValidation() {
