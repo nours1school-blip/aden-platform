@@ -1,199 +1,690 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>سفراء الزمن</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;800&family=Tajawal:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-<!-- Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-body{font-family:Cairo;background:#f5f7fb;margin:0;padding:20px}
-.container{max-width:900px;margin:auto}
+  :root{
+    --bg:#f5f7fb;
+    --card:#ffffff;
+    --text:#1f2937;
+    --muted:#6b7280;
+    --primary:#0b5ed7;
+    --primary-2:#084298;
+    --border:#d8e0ea;
+    --shadow:0 12px 30px rgba(0,0,0,.08);
+    --radius:18px;
+    --success:#198754;
+    --danger:#dc3545;
+    --warning:#ffc107;
+  }
 
-.btn{background:#0b5ed7;color:#fff;padding:10px 20px;border:none;border-radius:8px;cursor:pointer}
+  *{ box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body{
+    margin:0;
+    font-family:"Cairo","Tajawal",sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.7;
+  }
+  a{ color:inherit; }
 
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:15px;margin-top:20px}
+  .navbar{
+    position:sticky;
+    top:0;
+    z-index:1000;
+    background:rgba(255,255,255,.92);
+    backdrop-filter: blur(10px);
+    border-bottom:1px solid rgba(216,224,234,.8);
+  }
+  .nav-inner{
+    max-width:1150px;
+    margin:0 auto;
+    padding:14px 18px;
+    display:flex;
+    gap:18px;
+    align-items:center;
+    justify-content:center;
+    flex-wrap:wrap;
+  }
+  .navbar a{
+    text-decoration:none;
+    font-weight:800;
+    color:var(--primary);
+  }
+  .navbar a:hover{ color:var(--primary-2); }
 
-.card{background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 5px 15px rgba(0,0,0,.1)}
-.card img{width:100%;height:200px;object-fit:cover}
-.card div{padding:10px}
+  .hero, .section{
+    max-width:1150px;
+    margin:18px auto;
+    padding:24px;
+  }
 
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);justify-content:center;align-items:center}
-.modal-content{background:#fff;padding:20px;border-radius:10px;width:90%;max-width:400px}
+  .hero{
+    background:linear-gradient(135deg, #ffffff, #eef4ff);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    text-align:center;
+    padding:34px 24px;
+  }
+  .hero h1{
+    margin:0 0 8px;
+    font-size:clamp(2rem, 4vw, 3.2rem);
+    color:var(--primary-2);
+  }
+  .hero p{
+    margin:0;
+    color:var(--muted);
+    font-size:1.05rem;
+  }
 
-input,textarea,select{width:100%;margin-top:10px;padding:10px;border-radius:8px;border:1px solid #ccc}
+  .section{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+  }
+  .section h2{
+    margin:0 0 12px;
+    font-size:1.6rem;
+    color:var(--primary-2);
+  }
+  .section-desc, .hint{
+    margin-top:8px;
+    color:var(--muted);
+    font-size:.95rem;
+  }
+
+  .btn{
+    border:0;
+    background:var(--primary);
+    color:#fff;
+    padding:12px 18px;
+    border-radius:12px;
+    font-weight:800;
+    cursor:pointer;
+    transition:.2s ease;
+  }
+  .btn:hover{ transform:translateY(-1px); background:var(--primary-2); }
+  .btn:disabled{ opacity:.7; cursor:not-allowed; transform:none; }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));
+    gap:16px;
+    margin-top:18px;
+  }
+
+  .gallery-card{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:16px;
+    overflow:hidden;
+    box-shadow:0 8px 20px rgba(0,0,0,.06);
+  }
+  .gallery-card img{
+    width:100%;
+    height:220px;
+    object-fit:cover;
+    display:block;
+    background:#eef2f7;
+  }
+  .card-content{ padding:14px 16px 16px; }
+  .card-content h4{ margin:0 0 8px; font-size:1.05rem; }
+  .card-content p{ margin:0 0 10px; color:#4b5563; }
+  .card-content span{ color:var(--muted); font-weight:700; }
+
+  .services-tabs{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin:16px 0 18px;
+  }
+  .tab{
+    border:1px solid var(--border);
+    background:#fff;
+    color:var(--text);
+    padding:10px 14px;
+    border-radius:999px;
+    cursor:pointer;
+    font-weight:700;
+  }
+  .tab.active{
+    background:var(--primary);
+    color:#fff;
+    border-color:var(--primary);
+  }
+
+  .services-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
+    gap:16px;
+  }
+  .service-card{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:16px;
+    box-shadow:0 8px 20px rgba(0,0,0,.06);
+    padding:18px;
+    position:relative;
+  }
+  .badge{
+    display:inline-block;
+    padding:6px 10px;
+    border-radius:999px;
+    background:#eef4ff;
+    color:var(--primary-2);
+    font-weight:700;
+    font-size:.9rem;
+    margin-bottom:10px;
+  }
+  .service-card .icon{
+    font-size:2rem;
+    color:var(--primary);
+    margin:8px 0 10px;
+  }
+  .service-card h4{ margin:0 0 8px; }
+  .service-card p{ margin:0; color:var(--muted); }
+
+  footer{
+    max-width:1150px;
+    margin:18px auto 30px;
+    padding:20px 24px;
+    text-align:center;
+    color:var(--muted);
+  }
+
+  /* Modal */
+  .modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.58);
+    z-index:2000;
+    padding:18px;
+    align-items:center;
+    justify-content:center;
+  }
+  .modal-content{
+    width:min(96vw, 560px);
+    background:#fff;
+    border-radius:22px;
+    box-shadow:var(--shadow);
+    padding:20px;
+    position:relative;
+    border:1px solid var(--border);
+    max-height:92vh;
+    overflow:auto;
+  }
+  .close-btn{
+    position:absolute;
+    top:12px;
+    left:14px;
+    border:0;
+    background:transparent;
+    font-size:28px;
+    cursor:pointer;
+    line-height:1;
+    color:#111827;
+  }
+
+  form{
+    margin-top:10px;
+  }
+  form input,
+  form textarea,
+  form select{
+    width:100%;
+    display:block;
+    margin-top:12px;
+    padding:12px 14px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    font:inherit;
+    background:#fff;
+    color:var(--text);
+    outline:none;
+  }
+  form textarea{
+    min-height:120px;
+    resize:vertical;
+  }
+
+  .uploader-wrap{
+    margin-top:12px;
+    padding:12px;
+    border:1px dashed #b9c7d8;
+    border-radius:14px;
+    background:#f8fbff;
+  }
+
+  .alert{
+    padding:12px 14px;
+    border-radius:12px;
+    margin:12px 0 0;
+    font-size:.95rem;
+  }
+  .alert-success{ background:#d1e7dd; color:#0f5132; border:1px solid #badbcc; }
+  .alert-error{ background:#f8d7da; color:#842029; border:1px solid #f5c2c7; }
+  .alert-info{ background:#cff4fc; color:#055160; border:1px solid #b6effb; }
+
+  .empty-state{
+    grid-column:1 / -1;
+    text-align:center;
+    padding:60px 20px;
+    color:var(--muted);
+  }
+
+  .spinner{
+    display:inline-block;
+    width:16px;
+    height:16px;
+    border:2px solid rgba(255,255,255,.3);
+    border-radius:50%;
+    border-top-color:#fff;
+    animation:spin .8s linear infinite;
+    margin-left:8px;
+    vertical-align:middle;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+
+  @media(max-width:768px){
+    .hero h1{ font-size:1.8rem; }
+    .modal-content{ padding:18px; }
+  }
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="#home">الرئيسية</a>
+    <a href="#landmarks">المعالم</a>
+    <a href="#experiences">تجارب الزوار</a>
+    <a href="#survey">استبيان</a>
+    <a href="#services">الخدمات</a>
+  </div>
+</nav>
 
-<h2>تجارب الزوار</h2>
+<section id="home" class="hero">
+  <h1>اكتشف سحر عدن التاريخية</h1>
+  <p>مدينة البحر والتاريخ والحضارة</p>
+</section>
 
-<button class="btn" onclick="openModal()">شارك تجربتك</button>
+<section id="landmarks" class="section">
+  <h2>المعالم السياحية</h2>
+  <p class="section-desc">معالم مميزة يمكن للزائر استكشافها ومشاركتها.</p>
 
-<div id="gallery" class="grid"></div>
+  <div class="grid">
+    <div class="gallery-card">
+      <img src="images/f.jpg" alt="قلعة صيرة">
+      <div class="card-content">
+        <h4>قلعة صيرة</h4>
+        <p>حصن تاريخي يطل على ميناء عدن.</p>
+        <a href="https://www.google.com/maps?q=قلعة+صيرة+عدن" target="_blank">📍 عرض على الخريطة</a>
+      </div>
+    </div>
 
-</div>
+    <div class="gallery-card">
+      <img src="images/t.jpg" alt="صهاريج عدن">
+      <div class="card-content">
+        <h4>صهاريج عدن</h4>
+        <p>خزانات مياه تاريخية في وادي الطويلة.</p>
+        <a href="https://www.google.com/maps?q=صهاريج+عدن" target="_blank">📍 عرض على الخريطة</a>
+      </div>
+    </div>
+  </div>
+</section>
 
-<!-- Modal -->
-<div id="modal" class="modal">
+<section id="experiences" class="section">
+  <h2>تجارب الزوار</h2>
+  <p class="hint">ارفع صورة واحدة، ثم اكتب اسمك والمكان والتعليق.</p>
+  <button class="btn" onclick="openExperienceModal()">شارك تجربتك</button>
+
+  <div id="gallery" class="grid" style="margin-top:18px;"></div>
+</section>
+
+<div id="experienceModal" class="modal" aria-hidden="true">
   <div class="modal-content">
-
-    <span onclick="closeModal()" style="cursor:pointer">❌</span>
+    <button class="close-btn" type="button" onclick="closeExperienceModal()">×</button>
 
     <h3>مشاركة تجربة</h3>
 
-    <form id="form">
+    <form id="experienceForm" autocomplete="off">
+      <input type="text" name="name" id="nameInput" placeholder="اسمك" required>
+      <input type="text" name="place" id="placeInput" placeholder="اسم المكان" required>
 
-      <input type="text" id="name" placeholder="اسمك" required>
-      <input type="text" id="place" placeholder="المكان" required>
+      <div class="uploader-wrap">
+        <uc-upload-ctx-provider id="uploaderctx" ctx-name="my-uploader"></uc-upload-ctx-provider>
+        <uc-config ctx-name="my-uploader" pubkey="492ad76c8d4cd40b9428"></uc-config>
+        <uc-file-uploader-regular ctx-name="my-uploader"></uc-file-uploader-regular>
+        <input type="hidden" id="imageUrl" name="imageUrl" value="">
+      </div>
 
-      <input type="file" id="file" accept="image/*" required>
-
-      <select id="rating" required>
-        <option value="">التقييم</option>
-        <option>⭐</option>
-        <option>⭐⭐</option>
-        <option>⭐⭐⭐</option>
-        <option>⭐⭐⭐⭐</option>
-        <option>⭐⭐⭐⭐⭐</option>
+      <label style="display:block;margin-top:12px;font-weight:700">التقييم</label>
+      <select name="rating" id="ratingInput" required>
+        <option value="">اختر التقييم</option>
+        <option value="⭐">⭐</option>
+        <option value="⭐⭐">⭐⭐</option>
+        <option value="⭐⭐⭐">⭐⭐⭐</option>
+        <option value="⭐⭐⭐⭐">⭐⭐⭐⭐</option>
+        <option value="⭐⭐⭐⭐⭐">⭐⭐⭐⭐⭐</option>
       </select>
 
-      <textarea id="comment" placeholder="اكتب تجربتك..." required></textarea>
+      <textarea name="comment" id="commentInput" placeholder="اكتب تجربتك..." required></textarea>
 
-      <button class="btn" type="submit">نشر</button>
-
+      <button class="btn" type="submit" id="submitBtn">نشر التجربة</button>
     </form>
 
+    <p class="hint" id="uploadStateText">اختر صورة ثم انتظر حتى يكتمل الرفع.</p>
+    <div id="formAlert"></div>
   </div>
 </div>
 
+<section id="survey" class="section">
+  <h2>استبيان</h2>
+  <p class="section-desc">يساعدنا رأيك على تحسين خدمات المنصة.</p>
+
+  <form class="survey-form" action="https://formspree.io/f/xaqajwvd" method="POST">
+    <input type="text" name="name" placeholder="اسمك">
+    <textarea name="feedback" placeholder="اكتب رأيك..." required></textarea>
+    <button class="btn" type="submit">إرسال</button>
+  </form>
+</section>
+
+<section id="services" class="section">
+  <h2>الخدمات المميزة</h2>
+  <p class="section-desc">أماكن موثوقة بتقييمات عالية وثابتة.</p>
+
+  <div class="services-tabs">
+    <button class="tab active" data-filter="all">الكل</button>
+    <button class="tab" data-filter="hotel">فنادق</button>
+    <button class="tab" data-filter="restaurant">مطاعم</button>
+    <button class="tab" data-filter="mall">مولات</button>
+    <button class="tab" data-filter="shop">متاجر</button>
+  </div>
+
+  <div class="services-grid">
+    <div class="service-card hotel">
+      <span class="badge">⭐ 4.5</span>
+      <i class="fa-solid fa-hotel icon"></i>
+      <h4>فندق كورال باي</h4>
+      <p>فندق فاخر بتقييم ثابت وخدمة مميزة</p>
+    </div>
+
+    <div class="service-card hotel">
+      <span class="badge">⭐ 4.3</span>
+      <i class="fa-solid fa-hotel icon"></i>
+      <h4>فندق عدن مول</h4>
+      <p>موقع ممتاز وخدمات راقية</p>
+    </div>
+
+    <div class="service-card restaurant">
+      <span class="badge">⭐ 4.6</span>
+      <i class="fa-solid fa-utensils icon"></i>
+      <h4>مطعم الشراع</h4>
+      <p>مأكولات بحرية مشهورة</p>
+    </div>
+
+    <div class="service-card restaurant">
+      <span class="badge">⭐ 4.4</span>
+      <i class="fa-solid fa-utensils icon"></i>
+      <h4>مطعم ريمبو</h4>
+      <p>أكلات عالمية بجودة عالية</p>
+    </div>
+
+    <div class="service-card mall">
+      <span class="badge">⭐ 4.5</span>
+      <i class="fa-solid fa-store icon"></i>
+      <h4>عدن مول</h4>
+      <p>تسوق، مطاعم، وترفيه</p>
+    </div>
+
+    <div class="service-card shop">
+      <span class="badge">⭐ 4.2</span>
+      <i class="fa-solid fa-bag-shopping icon"></i>
+      <h4>متاجر كريتر</h4>
+      <p>منتجات محلية وأسعار مناسبة</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>© 2026 سفراء الزمن — جميع الحقوق محفوظة</div>
+</footer>
+
 <script>
+  // غيّر هذه القيم إلى بيانات مشروعك الحقيقي
+  const SUPABASE_URL = "https://YOUR_PROJECT_REF.supabase.co";
+  const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
 
-/* =========================
-   إعداد Supabase
-========================= */
-const SUPABASE_URL = "https://txqqfiphdsuedwcrvjjs.supabase.co";
-const SUPABASE_KEY = "YOUR_ANON_KEY"; // ← ضع مفتاحك هنا
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  const BUCKET_NAME = "experiences";
+  const TABLE_NAME = "experiences";
 
-/* =========================
-   Modal
-========================= */
-function openModal(){
-  document.getElementById("modal").style.display="flex";
-}
-function closeModal(){
-  document.getElementById("modal").style.display="none";
-}
+  const modal = document.getElementById("experienceModal");
+  const form = document.getElementById("experienceForm");
+  const gallery = document.getElementById("gallery");
+  const uploadStateText = document.getElementById("uploadStateText");
+  const formAlert = document.getElementById("formAlert");
+  const imageUrlInput = document.getElementById("imageUrl");
+  const fileUploader = document.querySelector("[role='uploadcare-uploader']");
+  const submitBtn = document.getElementById("submitBtn");
 
-/* =========================
-   Form Submit
-========================= */
-document.getElementById("form").addEventListener("submit", async (e)=>{
-  e.preventDefault();
+  let uploadReady = false;
 
-  const name = document.getElementById("name").value;
-  const place = document.getElementById("place").value;
-  const comment = document.getElementById("comment").value;
-  const rating = document.getElementById("rating").value;
-  const file = document.getElementById("file").files[0];
+  function openExperienceModal(){
+    modal.style.display = "flex";
+    modal.setAttribute("aria-hidden", "false");
+  }
 
-  try{
+  function closeExperienceModal(){
+    modal.style.display = "none";
+    modal.setAttribute("aria-hidden", "true");
+    clearFormMessages();
+  }
 
-    /* رفع الصورة */
-    const fileName = Date.now() + "-" + file.name;
+  function clearFormMessages(){
+    formAlert.innerHTML = "";
+    uploadStateText.textContent = "اختر صورة ثم انتظر حتى يكتمل الرفع.";
+  }
 
-    const { error: uploadError } = await client
-      .storage
-      .from("experiences")
-      .upload(fileName, file);
+  function showAlert(message, type){
+    const cls = type === "success" ? "alert-success" : type === "error" ? "alert-error" : "alert-info";
+    formAlert.innerHTML = `<div class="alert ${cls}">${message}</div>`;
+  }
 
-    if(uploadError) throw uploadError;
+  function escapeHtml(text){
+    const div = document.createElement("div");
+    div.textContent = text ?? "";
+    return div.innerHTML;
+  }
 
-    const { data } = client
-      .storage
-      .from("experiences")
-      .getPublicUrl(fileName);
+  function addCardToGallery(item){
+    const card = document.createElement("div");
+    card.className = "gallery-card";
 
-    const image_url = data.publicUrl;
+    const safePlace = escapeHtml(item.place);
+    const safeComment = escapeHtml(item.comment);
+    const safeName = escapeHtml(item.user_name);
+    const safeImage = escapeHtml(item.image_url);
+    const safeRating = escapeHtml(item.rating || "⭐");
+    const safeDate = item.created_at ? new Date(item.created_at).toLocaleDateString("ar-SA") : "";
 
-    /* حفظ في DB */
-    const { error: dbError } = await client
-      .from("experiences")
-      .insert([{
-        user_name: name,
+    card.innerHTML = `
+      <img src="${safeImage}" alt="${safePlace}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x200?text=صورة+غير+متوفرة'">
+      <div class="card-content">
+        <h4>📍 ${safePlace}</h4>
+        <p>${safeComment}</p>
+        <div style="font-size:1.15rem;margin:8px 0;">${safeRating}</div>
+        <span>✍️ ${safeName}</span><br>
+        <small style="color:var(--muted)">${safeDate}</small>
+      </div>
+    `;
+    gallery.prepend(card);
+  }
+
+  async function loadExperiences(){
+    const { data, error } = await sb
+      .from(TABLE_NAME)
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(50);
+
+    if (error){
+      console.error(error);
+      return;
+    }
+
+    if (data && data.length){
+      gallery.innerHTML = "";
+      data.forEach(addCardToGallery);
+    }
+  }
+
+  // Uploadcare events
+  if (fileUploader){
+    fileUploader.addEventListener("file-upload-start", () => {
+      uploadReady = false;
+      imageUrlInput.value = "";
+      uploadStateText.textContent = "⏳ جاري رفع الصورة...";
+    });
+
+    fileUploader.addEventListener("file-upload-success", (e) => {
+      const item = e.detail;
+      imageUrlInput.value = item.cdnUrl || "";
+      uploadReady = true;
+      uploadStateText.textContent = "✅ تم رفع الصورة بنجاح.";
+    });
+
+    fileUploader.addEventListener("file-upload-failed", () => {
+      uploadReady = false;
+      imageUrlInput.value = "";
+      uploadStateText.textContent = "❌ فشل رفع الصورة. جرّب صورة أخرى.";
+    });
+
+    fileUploader.addEventListener("file-url-changed", (e) => {
+      const item = e.detail;
+      imageUrlInput.value = item.cdnUrl || "";
+      uploadReady = !!imageUrlInput.value;
+    });
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    clearFormMessages();
+
+    const user_name = document.getElementById("nameInput").value.trim();
+    const place = document.getElementById("placeInput").value.trim();
+    const rating = document.getElementById("ratingInput").value.trim();
+    const comment = document.getElementById("commentInput").value.trim();
+    const image_url = imageUrlInput.value.trim();
+
+    if (!user_name || !place || !rating || !comment){
+      showAlert("⚠️ أكمل الحقول المطلوبة.", "error");
+      return;
+    }
+
+    if (!uploadReady || !image_url.startsWith("https")){
+      showAlert("⚠️ انتظر حتى يكتمل رفع الصورة أولاً.", "error");
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner"></span> جاري النشر...';
+
+    try{
+      const { error } = await sb.from(TABLE_NAME).insert([{
+        user_name,
         place,
         rating,
         comment,
-        image_url
+        image_url,
+        created_at: new Date().toISOString()
       }]);
 
-    if(dbError) throw dbError;
+      if (error) throw error;
 
-    /* عرض */
-    addCard(name, place, comment, rating, image_url);
+      // إذا أردت إرسال نسخة بالبريد أيضًا:
+      await fetch("https://formspree.io/f/xaqajwvd", {
+        method: "POST",
+        headers: { "Accept": "application/json" },
+        body: new URLSearchParams({
+          name: user_name,
+          place,
+          comment,
+          rating,
+          image: image_url
+        })
+      }).catch(() => {});
 
-    alert("✅ تم النشر");
+      addCardToGallery({
+        user_name,
+        place,
+        rating,
+        comment,
+        image_url,
+        created_at: new Date().toISOString()
+      });
 
-    document.getElementById("form").reset();
-    closeModal();
+      showAlert("🎉 تم نشر التجربة بنجاح!", "success");
 
-  }catch(err){
-    console.error(err);
-    alert("❌ خطأ: " + err.message);
-  }
-});
-
-/* =========================
-   عرض البيانات
-========================= */
-function addCard(name, place, comment, rating, image){
-  const card = document.createElement("div");
-  card.className="card";
-
-  card.innerHTML = `
-    <img src="${image}">
-    <div>
-      <h4>${place}</h4>
-      <p>${comment}</p>
-      <div>${rating}</div>
-      <span>— ${name}</span>
-    </div>
-  `;
-
-  document.getElementById("gallery").prepend(card);
-}
-
-/* =========================
-   تحميل البيانات
-========================= */
-async function loadData(){
-  const { data } = await client
-    .from("experiences")
-    .select("*")
-    .order("id", { ascending:false });
-
-  data.forEach(item=>{
-    addCard(
-      item.user_name,
-      item.place,
-      item.comment,
-      item.rating,
-      item.image_url
-    );
+      form.reset();
+      uploadReady = false;
+      imageUrlInput.value = "";
+      clearFormMessages();
+      uploadStateText.textContent = "اختر صورة ثم انتظر حتى يكتمل الرفع.";
+      closeExperienceModal();
+    }catch(err){
+      console.error(err);
+      showAlert("❌ " + (err.message || "حدث خطأ أثناء الحفظ."), "error");
+    }finally{
+      submitBtn.disabled = false;
+      submitBtn.textContent = "نشر التجربة";
+    }
   });
-}
 
-loadData();
+  document.querySelectorAll(".tab").forEach(tab => {
+    tab.addEventListener("click", () => {
+      document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+      tab.classList.add("active");
 
+      const filter = tab.dataset.filter;
+      document.querySelectorAll(".service-card").forEach(card => {
+        card.style.display = (filter === "all" || card.classList.contains(filter)) ? "block" : "none";
+      });
+    });
+  });
+
+  document.querySelectorAll("a[href^='#']").forEach(link => {
+    link.addEventListener("click", e => {
+      const target = document.querySelector(link.getAttribute("href"));
+      if (!target) return;
+      e.preventDefault();
+      target.scrollIntoView({ behavior: "smooth" });
+    });
+  });
+
+  document.addEventListener("click", (e) => {
+    if (e.target === modal) closeExperienceModal();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modal.style.display === "flex") closeExperienceModal();
+  });
+
+  loadExperiences();
 </script>
 
 </body>
