@@ -219,140 +219,97 @@ font-size:20px;
 
   <!-- أهم تعديل: إصلاح رفع الصورة + تحسين UX -->
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
+const supabase = window.supabase.createClient(
+  "https://txqqfiphdsuedwcrvjjs.supabase.co",
+  "YOUR_PUBLIC_ANON_KEY"
+);
 
-const modal = document.getElementById("modal");
-const form = document.getElementById("form");
-const gallery = document.getElementById("gallery");
+let imageFile;
 
-const uploadBox = document.getElementById("uploadBox");
-const fileInput = document.getElementById("file");
-const preview = document.getElementById("preview");
+/* اختيار صورة */
+fileInput.addEventListener("change", ()=>{
+  imageFile = fileInput.files[0];
 
-let imageUrl = "";
-
-/* فتح */
-function openModal(){
-  modal.style.display="flex";
-}
-
-/* إغلاق */
-modal.onclick = (e)=>{
-  if(e.target === modal) modal.style.display="none";
-}
-
-/* تحسين الضغط */
-uploadBox.addEventListener("click", ()=>{
-  fileInput.click();
-});
-
-/* Drag */
-uploadBox.addEventListener("dragover", e=>{
-  e.preventDefault();
-  uploadBox.style.background="#e6f2ff";
-});
-
-uploadBox.addEventListener("dragleave", ()=>{
-  uploadBox.style.background="#f7fbff";
-});
-
-uploadBox.addEventListener("drop", e=>{
-  e.preventDefault();
-  fileInput.files = e.dataTransfer.files;
-  handleFile();
-});
-
-/* اختيار */
-fileInput.addEventListener("change", handleFile);
-
-/* رفع */
-async function handleFile(){
-
-  const file = fileInput.files[0];
-  if(!file) return;
-
-  // عرض مباشر
-  preview.src = URL.createObjectURL(file);
+  preview.src = URL.createObjectURL(imageFile);
   preview.style.display="block";
+});
 
-  uploadBox.innerHTML="⏳ جاري رفع الصورة...";
-
-  try{
-
-    const fd = new FormData();
-    fd.append("UPLOADCARE_PUB_KEY","492ad76c8d4cd40b9428");
-    fd.append("file",file);
-
-    const res = await fetch("https://upload.uploadcare.com/base/",{
-      method:"POST",
-      body:fd
-    });
-
-    const data = await res.json();
-
-    if(!data.file){
-      throw new Error("فشل الرفع");
-    }
-
-    imageUrl = "https://ucarecdn.com/"+data.file+"/";
-
-    uploadBox.innerHTML="✅ تم رفع الصورة";
-
-  }catch(err){
-    uploadBox.innerHTML="❌ فشل الرفع";
-    console.error(err);
-  }
-}
-
-/* نشر */
-form.addEventListener("submit", async(e)=>{
+/* إرسال */
+form.addEventListener("submit", async (e)=>{
   e.preventDefault();
 
-  if(!imageUrl){
-    alert("❌ يجب رفع صورة أولاً");
+  if(!imageFile){
+    alert("ارفع صورة");
     return;
   }
 
   try{
 
-    await fetch("https://formspree.io/f/xaqajwvd",{
-      method:"POST",
-      headers:{Accept:"application/json"},
-      body:new URLSearchParams({
-        name:name.value,
-        place:place.value,
-        comment:comment.value,
-        image:imageUrl
-      })
-    });
+    /* رفع الصورة */
+    const fileName = Date.now()+"-"+imageFile.name;
 
-    gallery.insertAdjacentHTML("afterbegin",`
-      <div class="gallery-card">
-        <img src="${imageUrl}">
-        <div class="card-content">
-          <h4>${place.value}</h4>
-          <p>${comment.value}</p>
-          <span>${name.value}</span>
-        </div>
-      </div>
-    `);
+    const { error: uploadError } = await supabase
+      .storage
+      .from("experiences")
+      .upload(fileName, imageFile);
 
-    /* Reset */
+    if(uploadError) throw uploadError;
+
+    const { data } = supabase
+      .storage
+      .from("experiences")
+      .getPublicUrl(fileName);
+
+    const image_url = data.publicUrl;
+
+    /* حفظ DB */
+    const { error: dbError } = await supabase
+      .from("experiences")
+      .insert([{
+        user_name: name.value,
+        place: place.value,
+        comment: comment.value,
+        image_url
+      }]);
+
+    if(dbError) throw dbError;
+
+    /* عرض */
+    addCard(name.value, place.value, comment.value, image_url);
+
+    alert("تم النشر ✅");
+
     form.reset();
     preview.style.display="none";
-    uploadBox.innerHTML="اضغط أو اسحب صورة هنا";
-    imageUrl="";
     modal.style.display="none";
 
-    alert("✅ تم النشر");
-
   }catch(err){
-    alert("❌ خطأ في الإرسال");
     console.error(err);
+    alert("خطأ: "+err.message);
   }
-
 });
 
+/* تحميل البيانات */
+async function loadData(){
+  const { data } = await supabase
+    .from("experiences")
+    .select("*")
+    .order("created_at",{ascending:false});
+
+  data.forEach(item=>{
+    addCard(
+      item.user_name,
+      item.place,
+      item.comment,
+      item.image_url
+    );
+  });
+}
+
+loadData();
 </script>
 
 </body>
