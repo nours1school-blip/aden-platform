@@ -67,7 +67,7 @@
     <p>شاركنا لحظاتك الجميلة واقرأ تجارب الآخرين</p>
   </div>
   <div style="text-align:center;margin:30px 0">
-    <button class="btn" id="openModalBtn" onclick="openModal()">📤 شارك تجربتك الآن</button>
+    <button class="btn" onclick="openModal()">📤 شارك تجربتك الآن</button>
   </div>
   <div id="gallery" class="grid">
     <div class="empty-state" id="emptyState">
@@ -129,31 +129,37 @@
 </div>
 
 <script>
-// ✅ تهيئة Supabase
+// ============================================
+// ✅ تهيئة Supabase - المفاتيح الصحيحة
+// ============================================
 const SUPABASE_URL = 'https://txqqfiphdsuedwcrvjjs.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR4cXFmaXBoZHN1ZWR3Y3J2ampzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY1OTIzOTQsImV4cCI6MjA5MjE2ODM5NH0.csgtDlFliEZzNgntm3IT99IEOXFjHTV3xqFP_3DJNWc';
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// ============================================
 // 📦 المتغيرات العامة
+// ============================================
 let selectedFile = null;
 let uploadedImageUrl = null;
 const BUCKET_NAME = 'experiences';
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
-// 🎭 عناصر DOM
+// ============================================
+// 🎭 عناصر DOM (سيتم تهيئتها لاحقاً)
+// ============================================
 let elements = {};
 
 // ============================================
-// 🚪 دوال النافذة المنبثقة (عامة)
+// 🚪 دوال النافذة المنبثقة (عامة - يجب أن تكون قبل الاستخدام)
 // ============================================
 function openModal() {
   console.log('🔴 openModal called');
-  const modal = document.getElementById('modal');
+  var modal = document.getElementById('modal');
   if (modal) {
     modal.classList.add('show');
     document.body.style.overflow = 'hidden';
-    setTimeout(() => {
-      const nameInput = document.getElementById('userName');
+    setTimeout(function() {
+      var nameInput = document.getElementById('userName');
       if (nameInput) nameInput.focus();
     }, 300);
     console.log('✅ Modal opened');
@@ -164,7 +170,7 @@ function openModal() {
 
 function closeModal() {
   console.log('🔵 closeModal called');
-  const modal = document.getElementById('modal');
+  var modal = document.getElementById('modal');
   if (modal) {
     modal.classList.remove('show');
     document.body.style.overflow = '';
@@ -177,7 +183,7 @@ function closeModal() {
 // 🚀 تهيئة التطبيق
 // ============================================
 function initApp() {
-  console.log(' Initializing app...');
+  console.log('🚀 Initializing app...');
   
   // تخزين العناصر
   elements = {
@@ -196,7 +202,7 @@ function initApp() {
     charCount: document.getElementById('charCount')
   };
   
-  console.log('📦 Elements:', elements);
+  console.log('📦 Elements cached');
   
   // إعداد المستمعين
   setupEventListeners();
@@ -216,7 +222,7 @@ function setupEventListeners() {
   // عدّاد الأحرف
   if (elements.comment) {
     elements.comment.addEventListener('input', function(e) {
-      const length = e.target.value.length;
+      var length = e.target.value.length;
       if (elements.charCount) {
         elements.charCount.textContent = length;
         elements.charCount.style.color = length > 480 ? 'var(--warning)' : 'inherit';
@@ -257,7 +263,7 @@ function setupEventListeners() {
 // 📷 معالجة اختيار الملف
 // ============================================
 function handleFileSelect(e) {
-  const file = e.target.files[0];
+  var file = e.target.files[0];
   if (!file) return;
   
   if (file.size > MAX_FILE_SIZE) {
@@ -274,7 +280,7 @@ function handleFileSelect(e) {
   
   selectedFile = file;
   
-  const reader = new FileReader();
+  var reader = new FileReader();
   reader.onload = function(event) {
     if (elements.previewImage) {
       elements.previewImage.src = event.target.result;
@@ -310,22 +316,26 @@ async function handleFormSubmit(e) {
   try {
     showStatus('📤 جاري رفع الصورة...', 'info');
     
-    const fileExt = selectedFile.name.split('.').pop();
-    const fileName = Date.now() + '-' + Math.random().toString(36).substring(7) + '.' + fileExt;
+    var fileExt = selectedFile.name.split('.').pop();
+    var fileName = Date.now() + '-' + Math.random().toString(36).substring(7) + '.' + fileExt;
     
-    const { error: uploadError } = await supabase
-      .storage
-      .from(BUCKET_NAME)
-      .upload(fileName, selectedFile, { cacheControl: '3600', upsert: false });
+    // رفع الصورة
+    var uploadResult = await supabase.storage.from(BUCKET_NAME).upload(fileName, selectedFile, { cacheControl: '3600', upsert: false });
     
-    if (uploadError) throw new Error('فشل رفع الصورة: ' + uploadError.message);
+    if (uploadResult.error) {
+      throw new Error('فشل رفع الصورة: ' + uploadResult.error.message);
+    }
     
-    const {  { publicUrl } } = supabase.storage.from(BUCKET_NAME).getPublicUrl(fileName);
-    uploadedImageUrl = publicUrl;
+    // ✅ الحصول على الرابط العام - التركيب الصحيح
+    var publicUrlResult = supabase.storage.from(BUCKET_NAME).getPublicUrl(fileName);
+    uploadedImageUrl = publicUrlResult.data.publicUrl;
+    
+    console.log('✅ Image uploaded:', uploadedImageUrl);
     
     showStatus('💾 جاري حفظ البيانات...', 'info');
     
-    const { error: dbError } = await supabase.from('experiences').insert([{
+    // حفظ البيانات في قاعدة البيانات
+    var dbResult = await supabase.from('experiences').insert([{
       user_name: document.getElementById('userName').value.trim(),
       place: document.getElementById('placeName').value.trim(),
       rating: document.getElementById('rating').value,
@@ -334,10 +344,13 @@ async function handleFormSubmit(e) {
       created_at: new Date().toISOString()
     }]);
     
-    if (dbError) throw new Error('فشل الحفظ: ' + dbError.message);
+    if (dbResult.error) {
+      throw new Error('فشل الحفظ: ' + dbResult.error.message);
+    }
     
     showAlert('🎉 تم النشر بنجاح! ✨', 'success');
     
+    // إضافة البطاقة فوراً
     addCardToGallery({
       user_name: document.getElementById('userName').value,
       place: document.getElementById('placeName').value,
@@ -366,9 +379,16 @@ function addCardToGallery(data) {
     elements.emptyState.style.display = 'none';
   }
   
-  const card = document.createElement('div');
+  var card = document.createElement('div');
   card.className = 'card';
-  card.innerHTML = '<img src="' + escapeHtml(data.image_url) + '" alt="' + escapeHtml(data.place) + '" loading="lazy" onerror="this.src=\'https://via.placeholder.com/300x200?text=صورة+غير+متوفرة\'"><div class="card-body"><h4 class="card-title">📍 ' + escapeHtml(data.place) + '</h4><p class="card-text">' + escapeHtml(data.comment) + '</p><div class="card-rating">' + data.rating + '</div><span class="card-author">✍️ ' + escapeHtml(data.user_name) + '</span><small class="card-date">📅 ' + new Date(data.created_at).toLocaleDateString('ar-SA') + '</small></div>';
+  
+  var safePlace = escapeHtml(data.place);
+  var safeComment = escapeHtml(data.comment);
+  var safeName = escapeHtml(data.user_name);
+  var safeImage = escapeHtml(data.image_url);
+  var safeDate = new Date(data.created_at).toLocaleDateString('ar-SA');
+  
+  card.innerHTML = '<img src="' + safeImage + '" alt="' + safePlace + '" loading="lazy" onerror="this.src=\'https://via.placeholder.com/300x200?text=صورة+غير+متوفرة\'"><div class="card-body"><h4 class="card-title">📍 ' + safePlace + '</h4><p class="card-text">' + safeComment + '</p><div class="card-rating">' + data.rating + '</div><span class="card-author">✍️ ' + safeName + '</span><small class="card-date">📅 ' + safeDate + '</small></div>';
   
   if (elements.gallery.firstChild) {
     elements.gallery.insertBefore(card, elements.gallery.firstChild);
@@ -378,29 +398,45 @@ function addCardToGallery(data) {
 }
 
 // ============================================
-// 📥 تحميل التجارب
+// 📥 تحميل التجارب من قاعدة البيانات
 // ============================================
 async function loadExperiences() {
   try {
-    const { data, error } = await supabase.from('experiences').select('*').order('created_at', { ascending: false }).limit(50);
-    if (error) { console.error('❌ Load error:', error); return; }
+    var result = await supabase.from('experiences').select('*').order('created_at', { ascending: false }).limit(50);
+    
+    if (result.error) {
+      console.error('❌ Load error:', result.error);
+      return;
+    }
+    
+    var data = result.data;
     if (data && data.length > 0) {
-      if (elements.emptyState) elements.emptyState.style.display = 'none';
-      data.forEach(function(exp) { addCardToGallery(exp); });
+      if (elements.emptyState) {
+        elements.emptyState.style.display = 'none';
+      }
+      for (var i = 0; i < data.length; i++) {
+        addCardToGallery(data[i]);
+      }
       console.log('✅ Loaded ' + data.length + ' experiences');
     }
   } catch (e) {
-    console.error('❌ Error:', e);
+    console.error('❌ Error in loadExperiences:', e);
   }
 }
 
 // ============================================
-// 🔔 التنبيهات
+// 🔔 نظام التنبيهات
 // ============================================
 function showAlert(message, type) {
   if (!elements.alertBox) return;
-  const cls = type === 'success' ? 'alert-success' : type === 'error' ? 'alert-error' : 'alert-info';
-  elements.alertBox.innerHTML = '<div class="alert ' + cls + '">' + message + '</div>';
+  
+  var alertClass = '';
+  if (type === 'success') alertClass = 'alert-success';
+  else if (type === 'error') alertClass = 'alert-error';
+  else alertClass = 'alert-info';
+  
+  elements.alertBox.innerHTML = '<div class="alert ' + alertClass + '">' + message + '</div>';
+  
   setTimeout(function() {
     if (elements.alertBox.firstChild) {
       elements.alertBox.firstChild.style.opacity = '0';
@@ -411,8 +447,13 @@ function showAlert(message, type) {
 
 function showStatus(message, type) {
   if (!elements.uploadStatus) return;
-  const cls = type === 'success' ? 'alert-success' : type === 'error' ? 'alert-error' : 'alert-info';
-  elements.uploadStatus.innerHTML = '<div class="alert ' + cls + '" style="margin:10px 0 0;padding:8px 12px">' + message + '</div>';
+  
+  var alertClass = '';
+  if (type === 'success') alertClass = 'alert-success';
+  else if (type === 'error') alertClass = 'alert-error';
+  else alertClass = 'alert-info';
+  
+  elements.uploadStatus.innerHTML = '<div class="alert ' + alertClass + '" style="margin:10px 0 0;padding:8px 12px">' + message + '</div>';
 }
 
 function clearAlert() {
@@ -425,24 +466,27 @@ function clearAlert() {
 // ============================================
 function resetForm() {
   if (elements.form) elements.form.reset();
+  
   if (elements.previewImage) elements.previewImage.style.display = 'none';
   if (elements.uploadPlaceholder) elements.uploadPlaceholder.style.display = 'block';
   if (elements.uploadArea) elements.uploadArea.classList.remove('has-image');
+  
   if (elements.charCount) {
     elements.charCount.textContent = '0';
     elements.charCount.style.color = 'inherit';
   }
+  
   selectedFile = null;
   uploadedImageUrl = null;
   clearAlert();
 }
 
 // ============================================
-// 🔐 حماية XSS
+// 🔐 حماية من هجمات XSS
 // ============================================
 function escapeHtml(text) {
   if (!text) return '';
-  const div = document.createElement('div');
+  var div = document.createElement('div');
   div.textContent = text;
   return div.innerHTML;
 }
@@ -451,9 +495,9 @@ function escapeHtml(text) {
 // 🚀 بدء التطبيق عند تحميل الصفحة
 // ============================================
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('📄 DOMContentLoaded');
+  console.log('📄 DOMContentLoaded - Starting app...');
   
-  // اختبار الاتصال
+  // اختبار الاتصال بـ Supabase
   supabase.from('experiences').select('count', { count: 'exact', head: true }).then(function(result) {
     if (result.error) {
       console.error('❌ Connection failed:', result.error);
