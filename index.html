@@ -218,28 +218,77 @@ font-size:20px;
 </footer>
 
   <!-- أهم تعديل: إصلاح رفع الصورة + تحسين UX -->
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
+
 const supabase = window.supabase.createClient(
   "https://txqqfiphdsuedwcrvjjs.supabase.co",
-  "YOUR_PUBLIC_ANON_KEY"
+  "PUT_YOUR_ANON_KEY_HERE"
 );
 
-let imageFile;
+/* عناصر */
+const fileInput = document.getElementById("file");
+const uploadBox = document.getElementById("uploadBox");
+const preview = document.getElementById("preview");
+const form = document.getElementById("form");
+const modal = document.getElementById("modal");
+const gallery = document.getElementById("gallery");
 
-/* اختيار صورة */
+let imageFile = null;
+
+/* ===== Modal ===== */
+function openModal(){
+  modal.style.display="flex";
+}
+
+modal.onclick = (e)=>{
+  if(e.target === modal){
+    modal.style.display="none";
+  }
+};
+
+/* ===== رفع الصورة ===== */
+uploadBox.onclick = ()=> fileInput.click();
+
 fileInput.addEventListener("change", ()=>{
   imageFile = fileInput.files[0];
+
+  if(!imageFile) return;
 
   preview.src = URL.createObjectURL(imageFile);
   preview.style.display="block";
 });
 
-/* إرسال */
+/* ===== إضافة كرت ===== */
+function addCard(name, place, comment, image){
+  const card = document.createElement("div");
+  card.className="gallery-card";
+
+  card.innerHTML = `
+    <img src="${image}">
+    <div class="card-content">
+      <h4>${place}</h4>
+      <p>${comment}</p>
+      <span>${name}</span>
+    </div>
+  `;
+
+  gallery.prepend(card);
+}
+
+/* ===== إرسال ===== */
 form.addEventListener("submit", async (e)=>{
   e.preventDefault();
+
+  const name = document.getElementById("name").value.trim();
+  const place = document.getElementById("place").value.trim();
+  const comment = document.getElementById("comment").value.trim();
+
+  if(!name || !place || !comment){
+    alert("أكمل البيانات");
+    return;
+  }
 
   if(!imageFile){
     alert("ارفع صورة");
@@ -269,35 +318,41 @@ form.addEventListener("submit", async (e)=>{
     const { error: dbError } = await supabase
       .from("experiences")
       .insert([{
-        user_name: name.value,
-        place: place.value,
-        comment: comment.value,
+        user_name: name,
+        place,
+        comment,
         image_url
       }]);
 
     if(dbError) throw dbError;
 
-    /* عرض */
-    addCard(name.value, place.value, comment.value, image_url);
-
-    alert("تم النشر ✅");
+    addCard(name, place, comment, image_url);
 
     form.reset();
     preview.style.display="none";
+    imageFile = null;
     modal.style.display="none";
+
+    alert("تم النشر ✅");
 
   }catch(err){
     console.error(err);
     alert("خطأ: "+err.message);
   }
+
 });
 
-/* تحميل البيانات */
+/* ===== تحميل البيانات ===== */
 async function loadData(){
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("experiences")
     .select("*")
     .order("created_at",{ascending:false});
+
+  if(error){
+    console.error(error);
+    return;
+  }
 
   data.forEach(item=>{
     addCard(
@@ -310,6 +365,7 @@ async function loadData(){
 }
 
 loadData();
+
 </script>
 
 </body>
