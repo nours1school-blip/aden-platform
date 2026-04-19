@@ -220,151 +220,82 @@ font-size:20px;
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-
+document.addEventListener("DOMContentLoaded", ()=>{
 const supabase = window.supabase.createClient(
   "https://txqqfiphdsuedwcrvjjs.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR4cXFmaXBoZHN1ZWR3Y3J2ampzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY1OTIzOTQsImV4cCI6MjA5MjE2ODM5NH0.csgtDlFliEZzNgntm3IT99IEOXFjHTV3xqFP_3DJNWc"
 );
-
-/* عناصر */
+const modal = document.getElementById("modal");
+const openBtn = document.getElementById("openBtn");
+const form = document.getElementById("form");
 const fileInput = document.getElementById("file");
 const uploadBox = document.getElementById("uploadBox");
 const preview = document.getElementById("preview");
-const form = document.getElementById("form");
-const modal = document.getElementById("modal");
 const gallery = document.getElementById("gallery");
 
-let imageFile = null;
+let imageFile=null;
 
-/* ===== Modal ===== */
-function openModal(){
+/* فتح */
+openBtn.addEventListener("click", ()=>{
   modal.style.display="flex";
-}
+});
 
-modal.onclick = (e)=>{
-  if(e.target === modal){
-    modal.style.display="none";
-  }
+/* إغلاق */
+modal.addEventListener("click",(e)=>{
+  if(e.target===modal) modal.style.display="none";
+});
+
+/* رفع */
+uploadBox.onclick=()=>fileInput.click();
+
+fileInput.onchange=()=>{
+  imageFile=fileInput.files[0];
+  preview.src=URL.createObjectURL(imageFile);
+  preview.style.display="block";
 };
 
-/* ===== رفع الصورة ===== */
-uploadBox.onclick = ()=> fileInput.click();
-
-fileInput.addEventListener("change", ()=>{
-  imageFile = fileInput.files[0];
-
-  if(!imageFile) return;
-
-  preview.src = URL.createObjectURL(imageFile);
-  preview.style.display="block";
-});
-
-/* ===== إضافة كرت ===== */
-function addCard(name, place, comment, image){
-  const card = document.createElement("div");
-  card.className="gallery-card";
-
-  card.innerHTML = `
-    <img src="${image}">
-    <div class="card-content">
-      <h4>${place}</h4>
-      <p>${comment}</p>
-      <span>${name}</span>
-    </div>
-  `;
-
-  gallery.prepend(card);
+/* إضافة */
+function addCard(n,p,c,img){
+  gallery.innerHTML+=`
+  <div class="gallery-card">
+  <img src="${img}">
+  <div class="card-content">
+  <h4>${p}</h4>
+  <p>${c}</p>
+  <span>${n}</span>
+  </div></div>`;
 }
 
-/* ===== إرسال ===== */
-form.addEventListener("submit", async (e)=>{
-  e.preventDefault();
+/* إرسال */
+form.onsubmit=async(e)=>{
+e.preventDefault();
 
-  const name = document.getElementById("name").value.trim();
-  const place = document.getElementById("place").value.trim();
-  const comment = document.getElementById("comment").value.trim();
+if(!imageFile)return alert("ارفع صورة");
 
-  if(!name || !place || !comment){
-    alert("أكمل البيانات");
-    return;
-  }
+const fileName=Date.now()+"-"+imageFile.name;
 
-  if(!imageFile){
-    alert("ارفع صورة");
-    return;
-  }
+await supabase.storage.from("experiences").upload(fileName,imageFile);
 
-  try{
+const {data}=supabase.storage.from("experiences").getPublicUrl(fileName);
 
-    /* رفع الصورة */
-    const fileName = Date.now()+"-"+imageFile.name;
+await supabase.from("experiences").insert([{
+user_name:name.value,
+place:place.value,
+comment:comment.value,
+image_url:data.publicUrl
+}]);
 
-    const { error: uploadError } = await supabase
-      .storage
-      .from("experiences")
-      .upload(fileName, imageFile);
+addCard(name.value,place.value,comment.value,data.publicUrl);
 
-    if(uploadError) throw uploadError;
+form.reset();
+preview.style.display="none";
+modal.style.display="none";
+imageFile=null;
 
-    const { data } = supabase
-      .storage
-      .from("experiences")
-      .getPublicUrl(fileName);
-
-    const image_url = data.publicUrl;
-
-    /* حفظ DB */
-    const { error: dbError } = await supabase
-      .from("experiences")
-      .insert([{
-        user_name: name,
-        place,
-        comment,
-        image_url
-      }]);
-
-    if(dbError) throw dbError;
-
-    addCard(name, place, comment, image_url);
-
-    form.reset();
-    preview.style.display="none";
-    imageFile = null;
-    modal.style.display="none";
-
-    alert("تم النشر ✅");
-
-  }catch(err){
-    console.error(err);
-    alert("خطأ: "+err.message);
-  }
+alert("تم النشر ✅");
+};
 
 });
-
-/* ===== تحميل البيانات ===== */
-async function loadData(){
-  const { data, error } = await supabase
-    .from("experiences")
-    .select("*")
-    .order("created_at",{ascending:false});
-
-  if(error){
-    console.error(error);
-    return;
-  }
-
-  data.forEach(item=>{
-    addCard(
-      item.user_name,
-      item.place,
-      item.comment,
-      item.image_url
-    );
-  });
-}
-
-loadData();
-
 </script>
 
 </body>
