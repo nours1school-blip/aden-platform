@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -6,7 +6,6 @@
 <title>سفراء الزمن</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;800&family=Tajawal&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
 *{box-sizing:border-box;font-family:'Tajawal',sans-serif}
@@ -25,10 +24,11 @@ padding:12px 25px;z-index:1000;
 .hero-overlay{
 background:rgba(0,0,0,.6);
 height:100%;display:flex;
-flex-direction:column;justify-content:center;align-items:center;
+justify-content:center;align-items:center;
 color:#fff;text-align:center;
+flex-direction:column;
 }
-.btn-primary{background:#f4a460;padding:12px 28px;border-radius:10px}
+.btn-primary{background:#f4a460;padding:12px 28px;border-radius:10px;border:none}
 
 .section{padding:90px 20px}
 .section-title{text-align:center;color:#0077be;font-size:28px}
@@ -36,8 +36,9 @@ color:#fff;text-align:center;
 .gallery{
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-gap:20px;max-width:1100px;margin:30px auto;
+gap:20px;max-width:1100px;margin:auto;
 }
+
 .gallery-card{
 background:#fff;border-radius:15px;
 overflow:hidden;box-shadow:0 10px 25px rgba(0,0,0,.1);
@@ -49,7 +50,7 @@ overflow:hidden;box-shadow:0 10px 25px rgba(0,0,0,.1);
 background:#0077be;color:#fff;
 border:none;padding:12px 25px;
 border-radius:25px;cursor:pointer;
-display:block;margin:20px auto;
+margin-top:10px;
 }
 
 .modal{
@@ -63,22 +64,33 @@ width:90%;max-width:400px;
 }
 
 #uploadBox{
+padding:20px;border:2px dashed #0077be;
+border-radius:12px;text-align:center;cursor:pointer;
 margin-top:10px;
-padding:20px;
-border:2px dashed #0077be;
-border-radius:12px;
-text-align:center;
-cursor:pointer;
-background:#f7fbff;
 }
 #preview{width:100%;margin-top:10px;border-radius:10px;display:none}
 
-/* ===== SURVEY ===== */
+/* رسائل */
+.form-message{
+margin-top:10px;
+padding:10px;
+border-radius:10px;
+display:none;
+text-align:center;
+}
+.success{background:#e6f7ec;color:#146c2e}
+.error{background:#fdecec;color:#b42318}
+
+/* تقييم */
+.rating{
+display:flex;justify-content:center;
+gap:10px;font-size:25px;cursor:pointer;
+}
+.rating span.active{color:gold}
+
 .survey-form{
 max-width:500px;margin:40px auto;
-background:#fff;padding:20px;
-border-radius:15px;
-box-shadow:0 10px 25px rgba(0,0,0,.1);
+background:#fff;padding:20px;border-radius:15px;
 display:flex;flex-direction:column;gap:10px;
 }
 
@@ -86,313 +98,198 @@ display:flex;flex-direction:column;gap:10px;
 background:#0b3c5d;color:#fff;
 text-align:center;padding:30px;
 }
-.social{display:flex;justify-content:center;gap:20px;margin-top:10px}
-
-
-  .form-message{
-  margin-top: 12px;
-  padding: 12px 14px;
-  border-radius: 12px;
-  font-size: 15px;
-  display: none;
-  text-align: center;
-}
-
-.form-message.success{
-  background: #e6f7ec;
-  color: #146c2e;
-  border: 1px solid #b7ebc6;
-}
-
-.form-message.error{
-  background: #fdecec;
-  color: #b42318;
-  border: 1px solid #f5b5b5;
-}
-  .rating{
-display:flex;
-justify-content:center;
-gap:10px;
-font-size:25px;
-cursor:pointer;
-}
-.rating span:hover,
-.rating span.active{
-color:gold;
-}
 </style>
 </head>
 
 <body>
 
-<!-- NAVBAR -->
 <nav class="navbar">
 <h2>عدن</h2>
 <ul>
-<li><a href="#home">الرئيسية</a></li>
 <li><a href="#exp">شارك تجربتك</a></li>
 <li><a href="#survey">استبيان</a></li>
 </ul>
 </nav>
 
-<!-- HERO -->
-<section id="home" class="hero">
+<section class="hero">
 <div class="hero-overlay">
 <h1>اكتشف سحر عدن</h1>
 <a href="#exp" class="btn-primary">ابدأ</a>
 </div>
 </section>
 
-<!-- EXPERIENCES -->
 <section id="exp" class="section">
 <h2 class="section-title">شارك تجربتك</h2>
-
 <button class="primary-btn" id="openBtn">إضافة تجربة</button>
-
 <div id="gallery" class="gallery"></div>
 </section>
 
-<!-- MODAL -->
 <div id="modal" class="modal">
 <div class="modal-content">
-<h3 style="text-align:center">شاركنا تجربتك</h3>
+<h3>شاركنا تجربتك</h3>
 
 <form id="form">
-<input type="text" id="name" placeholder="اسمك" required>
-<input type="text" id="place" placeholder="المكان" required>
+<input id="name" placeholder="اسمك" required>
+<input id="place" placeholder="المكان" required>
+
 <div id="uploadBox">اضغط لاختيار صورة</div>
-<input type="file" id="file" accept="image/*" hidden>
+<input type="file" id="file" hidden>
 <img id="preview">
+
 <textarea id="comment" placeholder="تعليقك" required></textarea>
-<button type="submit" class="primary-btn">نشر</button
-  <div id="expMsg" class="form-message"></div>
+
+<button type="submit" class="primary-btn">نشر</button>
+<div id="expMsg" class="form-message"></div>
 </form>
 
 </div>
 </div>
 
-<!-- SURVEY -->
+<!-- استبيان -->
+<section id="survey">
 <form id="surveyForm" class="survey-form">
-<input type="text" name="name" placeholder="اسمك" required>
+
+<input name="name" placeholder="اسمك" required>
+
+<div class="rating">
+<span data-rate="1">★</span>
+<span data-rate="2">★</span>
+<span data-rate="3">★</span>
+<span data-rate="4">★</span>
+<span data-rate="5">★</span>
+</div>
+
 <input type="hidden" name="rating" id="ratingValue">
 
 <textarea name="msg" placeholder="رأيك" required></textarea>
 
 <button class="primary-btn">إرسال</button>
 
-<p id="successMsg" style="display:none;color:green;text-align:center">
-✅ تم إرسال ردك بنجاح شكراً لك
-</p>
+<div id="surveyMsg" class="form-message"></div>
 
 </form>
+</section>
 
-<!-- FOOTER -->
 <footer id="footer">
 <p>© 2026 سفراء الزمن</p>
-<div class="social">
-<i class="fab fa-facebook"></i>
-<i class="fab fa-instagram"></i>
-<i class="fab fa-twitter"></i>
-</div>
 </footer>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-document.addEventListener("DOMContentLoaded", ()=>{
 
-/* ===== Supabase ===== */
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
 const supabase = window.supabase.createClient(
-  "https://txqqfiphdsuedwcrvjjs.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR4cXFmaXBoZHN1ZWR3Y3J2ampzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY1OTIzOTQsImV4cCI6MjA5MjE2ODM5NH0.csgtDlFliEZzNgntm3IT99IEOXFjHTV3xqFP_3DJNWc"
+"https://txqqfiphdsuedwcrvjjs.supabase.co",
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 );
 
-/* ===== عناصر ===== */
-const modal = document.getElementById("modal");
-const openBtn = document.getElementById("openBtn");
-const form = document.getElementById("form");
-const fileInput = document.getElementById("file");
-const uploadBox = document.getElementById("uploadBox");
-const preview = document.getElementById("preview");
-const gallery = document.getElementById("gallery");
+const modal=document.getElementById("modal");
+const openBtn=document.getElementById("openBtn");
+const form=document.getElementById("form");
+const fileInput=document.getElementById("file");
+const uploadBox=document.getElementById("uploadBox");
+const preview=document.getElementById("preview");
+const gallery=document.getElementById("gallery");
 
-/* المدخلات (المهم) */
-const nameInput = document.getElementById("name");
-const placeInput = document.getElementById("place");
-const commentInput = document.getElementById("comment");
+const expMsg=document.getElementById("expMsg");
+const surveyMsg=document.getElementById("surveyMsg");
 
-let imageFile = null;
+let imageFile=null;
 
-/* ===== فتح المودال ===== */
-openBtn.onclick = () => {
-  modal.style.display = "flex";
-};
-
-/* ===== إغلاق ===== */
-modal.onclick = (e) => {
-  if(e.target === modal){
-    modal.style.display = "none";
-  }
-};
-
-/* ===== اختيار صورة ===== */
-uploadBox.onclick = () => fileInput.click();
-
-fileInput.onchange = () => {
-  imageFile = fileInput.files[0];
-
-  if(!imageFile) return;
-
-  preview.src = URL.createObjectURL(imageFile);
-  preview.style.display = "block";
-};
-
-/* ===== إضافة كرت ===== */
-function addCard(name, place, comment, image){
-  const card = document.createElement("div");
-  card.className = "gallery-card";
-
-  card.innerHTML = `
-    <img src="${image}">
-    <div class="card-content">
-      <h4>${place}</h4>
-      <p>${comment}</p>
-      <span>${name}</span>
-    </div>
-  `;
-
-  gallery.prepend(card);
+function showMsg(el,text,type="success"){
+el.innerText=text;
+el.className="form-message "+type;
+el.style.display="block";
+setTimeout(()=>el.style.display="none",3000);
 }
 
-/* ===== إرسال ===== */
-form.onsubmit = async (e) => {
-  e.preventDefault();
+openBtn.onclick=()=>modal.style.display="flex";
+modal.onclick=e=>{if(e.target===modal)modal.style.display="none"};
 
-  const name = nameInput.value.trim();
-  const place = placeInput.value.trim();
-  const comment = commentInput.value.trim();
+uploadBox.onclick=()=>fileInput.click();
 
-  if(!name || !place || !comment){
-    alert("أكمل جميع الحقول");
-    return;
-  }
+fileInput.onchange=()=>{
+imageFile=fileInput.files[0];
+preview.src=URL.createObjectURL(imageFile);
+preview.style.display="block";
+};
 
-  if(!imageFile){
-    alert("ارفع صورة");
-    return;
-  }
-
-  try{
-
-    const fileName = Date.now() + "-" + imageFile.name;
-
-    /* رفع الصورة */
-    const { error: uploadError } = await supabase
-      .storage
-      .from("experiences")
-      .upload(fileName, imageFile);
-
-    if(uploadError) throw uploadError;
-
-    /* جلب الرابط */
-    const { data } = supabase
-      .storage
-      .from("experiences")
-      .getPublicUrl(fileName);
-
-    const image_url = data.publicUrl;
-
-    /* إدخال DB */
-    const { error: dbError } = await supabase
-      .from("experiences")
-      .insert([{
-        user_name: name,
-        place: place,
-        comment: comment,
-        image_url: image_url
-      }]);
-
-    if(dbError) throw dbError;
-
-    /* عرض */
-    addCard(name, place, comment, image_url);
-
-    /* Reset */
-    form.reset();
-    preview.style.display = "none";
-    imageFile = null;
-    modal.style.display = "none";
-const expMsg = document.getElementById("expMsg");
-
-function showMessage(el, text, type="success"){
-  el.innerText = text;
-  el.className = "form-message " + type;
-  el.style.display = "block";
-
-  setTimeout(()=>{
-    el.style.display = "none";
-  }, 3000);
-}   
-  }catch(err){
-    console.error(err);
-showMessage(expMsg, "❌ حدث خطأ أثناء النشر", "error");};
-
-/* ===== تحميل البيانات ===== */
-async function loadData(){
-
-  const { data, error } = await supabase
-    .from("experiences")
-    .select("*")
-    .order("created_at", { ascending: false });
-
-  if(error){
-    console.error(error);
-    return;
-  }
-
-  data.forEach(item=>{
-    addCard(
-      item.user_name,
-      item.place,
-      item.comment,
-      item.image_url
-    );
-  });
+function addCard(n,p,c,img){
+gallery.innerHTML+=`
+<div class="gallery-card">
+<img src="${img}">
+<div class="card-content">
+<h4>${p}</h4>
+<p>${c}</p>
+<span>${n}</span>
+</div>
+</div>`;
 }
 
-loadData();
+form.onsubmit=async e=>{
+e.preventDefault();
 
+if(!imageFile)return showMsg(expMsg,"ارفع صورة","error");
+
+try{
+const fileName=Date.now()+"-"+imageFile.name;
+
+await supabase.storage.from("experiences").upload(fileName,imageFile);
+
+const {data}=supabase.storage.from("experiences").getPublicUrl(fileName);
+
+await supabase.from("experiences").insert([{
+user_name:name.value,
+place:place.value,
+comment:comment.value,
+image_url:data.publicUrl
+}]);
+
+addCard(name.value,place.value,comment.value,data.publicUrl);
+
+form.reset();
+preview.style.display="none";
+imageFile=null;
+modal.style.display="none";
+
+showMsg(expMsg,"✅ تم نشر تجربتك");
+
+}catch(err){
+showMsg(expMsg,"❌ خطأ","error");
+}
+};
+
+/* تحميل */
+(async ()=>{
+const {data}=await supabase.from("experiences").select("*");
+data?.forEach(i=>addCard(i.user_name,i.place,i.comment,i.image_url));
+})();
+
+/* تقييم */
+document.querySelectorAll(".rating span").forEach(s=>{
+s.onclick=()=>{
+document.querySelectorAll(".rating span").forEach(x=>x.classList.remove("active"));
+s.classList.add("active");
+ratingValue.value=s.dataset.rate;
+};
 });
-  const stars = document.querySelectorAll(".rating span");
-const ratingValue = document.getElementById("ratingValue");
 
-stars.forEach(star=>{
-  star.addEventListener("click", ()=>{
-    stars.forEach(s=>s.classList.remove("active"));
-    star.classList.add("active");
-    ratingValue.value = star.dataset.rate;
-  });
+/* استبيان */
+surveyForm.onsubmit=async e=>{
+e.preventDefault();
+
+const res=await fetch("https://formspree.io/f/xaqajwvd",{
+method:"POST",
+body:new FormData(surveyForm),
+headers:{Accept:"application/json"}
 });
 
-/* إرسال بدون redirect */
-const surveyForm = document.getElementById("surveyForm");
-
-surveyForm.addEventListener("submit", async (e)=>{
-  e.preventDefault();
-
-  const data = new FormData(surveyForm);
-
-  const res = await fetch("https://formspree.io/f/xaqajwvd",{
-    method:"POST",
-    body:data,
-    headers:{Accept:"application/json"}
-  });
-
-  if(res.ok){
-    document.getElementById("successMsg").style.display="block";
-    surveyForm.reset();
-  }else{
-    alert("حدث خطأ ❌");
-  }
-});
+if(res.ok){
+showMsg(surveyMsg,"✅ تم إرسال تقييمك");
+surveyForm.reset();
+}else{
+showMsg(surveyMsg,"❌ فشل الإرسال","error");
+}
+};
 </script>
 
 </body>
