@@ -155,21 +155,17 @@ color:gold;
 <!-- MODAL -->
 <div id="modal" class="modal">
 <div class="modal-content">
-
 <h3 style="text-align:center">شاركنا تجربتك</h3>
 
 <form id="form">
 <input type="text" id="name" placeholder="اسمك" required>
 <input type="text" id="place" placeholder="المكان" required>
-
 <div id="uploadBox">اضغط لاختيار صورة</div>
 <input type="file" id="file" accept="image/*" hidden>
-
 <img id="preview">
-
 <textarea id="comment" placeholder="تعليقك" required></textarea>
-
-<button type="submit" class="primary-btn">نشر</button>
+<button type="submit" class="primary-btn">نشر</button
+  <div id="expMsg" class="form-message"></div>
 </form>
 
 </div>
@@ -324,14 +320,20 @@ form.onsubmit = async (e) => {
     preview.style.display = "none";
     imageFile = null;
     modal.style.display = "none";
+const expMsg = document.getElementById("expMsg");
 
-    alert("تم النشر ✅");
+function showMessage(el, text, type="success"){
+  el.innerText = text;
+  el.className = "form-message " + type;
+  el.style.display = "block";
 
+  setTimeout(()=>{
+    el.style.display = "none";
+  }, 3000);
+}   
   }catch(err){
     console.error(err);
-    alert("خطأ: " + err.message);
-  }
-};
+showMessage(expMsg, "❌ حدث خطأ أثناء النشر", "error");};
 
 /* ===== تحميل البيانات ===== */
 async function loadData(){
