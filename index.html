@@ -10,6 +10,29 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
+    /* ===== LOGO ===== */
+.logo{
+display:flex;
+align-items:center;
+gap:8px;
+font-family:'Cairo',sans-serif;
+font-weight:800;
+font-size:20px;
+color:#fff;
+}
+
+.logo i{
+font-size:22px;
+color:#ffd166;
+animation:rotateCompass 6s linear infinite;
+}
+
+/* حركة خفيفة */
+@keyframes rotateCompass{
+0%{transform:rotate(0deg);}
+100%{transform:rotate(360deg);}
+}
+    
 *{box-sizing:border-box;font-family:'Tajawal',sans-serif}
 body{margin:0;background:linear-gradient(135deg,#e9f2ff,#f7fbff)}
 .modal-content{
@@ -194,6 +217,53 @@ font-size:14px;
 transition:.3s;
 }
 .place-btn:hover{background:#005f94}
+    
+    /* ===== TOUR GUIDE ===== */
+.guide-section{
+  padding:60px 20px;
+  background:#f8fbff;
+  text-align:center;
+}
+
+.guide-grid{
+  margin-top:25px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:20px;
+  max-width:900px;
+  margin-inline:auto;
+}
+
+.guide-item{
+  background:#fff;
+  padding:20px;
+  border-radius:16px;
+  box-shadow:0 8px 25px rgba(0,0,0,0.06);
+  transition:.3s;
+  cursor:pointer;
+}
+
+.guide-item:hover{
+  transform:translateY(-6px);
+  box-shadow:0 12px 30px rgba(0,0,0,0.1);
+}
+
+.guide-item i{
+  font-size:28px;
+  color:#0077be;
+  margin-bottom:10px;
+}
+
+.guide-item h4{
+  margin:5px 0;
+  font-size:15px;
+}
+
+.guide-item span{
+  font-size:13px;
+  color:#777;
+}
+    
 </style>
 </head>
 
@@ -201,7 +271,10 @@ transition:.3s;
 
 <!-- NAVBAR -->
 <nav class="navbar">
-<h2></h2>
+<div class="logo">
+  <i class="fas fa-compass"></i>
+  <span>سفراء الزمن</span>
+</div>
 <ul>
 <li><a href="#home">الرئيسية</a></li>
 <li><a href="#places">الأماكن القريبة</a></li>
@@ -210,6 +283,7 @@ transition:.3s;
 </ul>
 </nav>
 
+    
 <!-- HERO -->
 <section id="home" class="hero">
 <div class="hero-overlay">
@@ -301,6 +375,44 @@ transition:.3s;
 </p>
 
 </form>
+    <!-- ===== TOUR GUIDE SECTION ===== -->
+<section class="guide-section">
+  <h2 class="section-title">استكشف عدن</h2>
+
+  <div class="guide-grid">
+
+    <div class="guide-item">
+      <i class="fas fa-utensils"></i>
+      <h4>مطاعم</h4>
+      <span>24 مكان</span>
+    </div>
+
+    <div class="guide-item">
+      <i class="fas fa-hotel"></i>
+      <h4>فنادق</h4>
+      <span>12 فندق</span>
+    </div>
+
+    <div class="guide-item">
+      <i class="fas fa-landmark"></i>
+      <h4>معالم أثرية</h4>
+      <span>8 مواقع</span>
+    </div>
+
+    <div class="guide-item">
+      <i class="fas fa-shopping-cart"></i>
+      <h4>سوبرماركت</h4>
+      <span>15 متجر</span>
+    </div>
+
+    <div class="guide-item">
+      <i class="fas fa-coffee"></i>
+      <h4>كافيهات</h4>
+      <span>18 كافيه</span>
+    </div>
+
+  </div>
+</section> 
 
 <!-- FOOTER -->
 <footer id="footer">
