@@ -1,144 +1,156 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>سفراء الزمن</title>
 
-<title>واجهة محسّنة</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;800&family=Tajawal&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-<!-- ================= CSS ================= -->
 <style>
+*{box-sizing:border-box;font-family:'Tajawal',sans-serif}
+body{margin:0;background:linear-gradient(135deg,#e9f2ff,#f7fbff)}
+.modal-content{
+  background:#fff;
+  padding:20px;
+  border-radius:15px;
+  width:90%;
+  max-width:400px;
 
-:root {
-  --primary: #4CAF50;
-  --primary-dark: #43a047;
-  --bg: #f5f7fa;
-  --card-bg: #ffffff;
-  --text: #333;
-  --border: #e0e0e0;
-  --error: #e53935;
-  --success: #43a047;
+  max-height:90vh;   /* مهم */
+  overflow-y:auto;   /* هذا هو السكرول */
+} 
+  form input, form textarea{
+  width:100%;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid #ddd;
+  outline:none;
+  transition:.3s;
 }
 
-/* Reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Cairo", sans-serif;
+form input:focus, form textarea:focus{
+  border-color:#0077be;
+  box-shadow:0 0 5px rgba(0,119,190,0.3);
 }
 
-/* Body */
-body {
-  background: var(--bg);
-  padding: 20px;
+form textarea{
+  resize:none;
+  min-height:80px;
+} 
+  
+.navbar{
+position:fixed;top:0;width:100%;
+background:#0077be;color:#fff;
+display:flex;justify-content:space-between;
+padding:12px 25px;z-index:1000;
+}
+.navbar ul{display:flex;gap:15px;list-style:none}
+.navbar a{color:#fff;text-decoration:none;font-weight:bold}
+
+.hero{height:100vh;background:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e') center/cover}
+.hero-overlay{
+background:rgba(0,0,0,.6);
+height:100%;display:flex;
+flex-direction:column;justify-content:center;align-items:center;
+color:#fff;text-align:center;
+}
+.btn-primary{background:#f4a460;padding:12px 28px;border-radius:10px}
+
+.section{padding:90px 20px}
+.section-title{text-align:center;color:#0077be;font-size:28px}
+
+.gallery{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;max-width:1100px;margin:30px auto;
+}
+.gallery-card{
+background:#fff;border-radius:15px;
+overflow:hidden;box-shadow:0 10px 25px rgba(0,0,0,.1);
+}
+.gallery-card img{width:100%;height:200px;object-fit:cover}
+.card-content{text-align:center;padding:10px}
+
+.primary-btn{
+background:#0077be;color:#fff;
+border:none;padding:12px 25px;
+border-radius:25px;cursor:pointer;
+display:block;margin:20px auto;
 }
 
-/* Container */
-.container {
-  max-width: 900px;
-  margin: auto;
+.modal{
+display:none;position:fixed;
+inset:0;background:rgba(0,0,0,.6);
+align-items:center;justify-content:center;
+}
+.modal-content{
+background:#fff;padding:20px;border-radius:15px;
+width:90%;max-width:400px;
 }
 
-/* Card */
-.card {
-  background: var(--card-bg);
-  border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-  margin-bottom: 20px;
+#uploadBox{
+margin-top:10px;
+padding:20px;
+border:2px dashed #0077be;
+border-radius:12px;
+text-align:center;
+cursor:pointer;
+background:#f7fbff;
+}
+#preview{width:100%;margin-top:10px;border-radius:10px;display:none}
+
+/* ===== SURVEY ===== */
+.survey-form{
+max-width:500px;margin:40px auto;
+background:#fff;padding:20px;
+border-radius:15px;
+box-shadow:0 10px 25px rgba(0,0,0,.1);
+display:flex;flex-direction:column;gap:10px;
 }
 
-/* Titles */
-.section-title {
-  font-size: 20px;
-  margin-bottom: 15px;
-  color: var(--text);
-  border-right: 4px solid var(--primary);
-  padding-right: 10px;
+#footer{
+background:#0b3c5d;color:#fff;
+text-align:center;padding:30px;
 }
+.social{display:flex;justify-content:center;gap:20px;margin-top:10px}
 
-/* Form */
-.form-group {
-  margin-bottom: 15px;
-}
 
-label {
-  display: block;
-  margin-bottom: 6px;
-  font-size: 14px;
-  color: #555;
-}
-
-/* Inputs */
-input, textarea, select {
-  width: 100%;
-  padding: 12px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  font-size: 14px;
-  transition: 0.3s;
-}
-
-input:focus, textarea:focus, select:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(76,175,80,0.15);
-  outline: none;
-}
-
-/* Button */
-button {
-  width: 100%;
-  padding: 12px;
-  border: none;
+  .form-message{
+  margin-top: 12px;
+  padding: 12px 14px;
   border-radius: 12px;
-  background: var(--primary);
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-button:hover {
-  background: var(--primary-dark);
-  transform: translateY(-1px);
-}
-
-/* Messages */
-.message {
-  padding: 12px;
-  border-radius: 10px;
-  margin-top: 10px;
-  font-size: 14px;
+  font-size: 15px;
   display: none;
+  text-align: center;
 }
 
-.message.success {
-  background: #e8f5e9;
-  color: var(--success);
+.form-message.success{
+  background: #e6f7ec;
+  color: #146c2e;
+  border: 1px solid #b7ebc6;
 }
 
-.message.error {
-  background: #ffebee;
-  color: var(--error);
+.form-message.error{
+  background: #fdecec;
+  color: #b42318;
+  border: 1px solid #f5b5b5;
+}
+  .rating{
+display:flex;
+justify-content:center;
+gap:10px;
+font-size:25px;
+cursor:pointer;
+}
+.rating span:hover,
+.rating span.active{
+color:gold;
 }
 
-/* Image Preview Scroll */
-.preview-container {
-  max-height: 250px;
-  overflow-y: auto;
-  border: 1px dashed var(--border);
-  border-radius: 10px;
-  padding: 10px;
-}
-
-.preview-container img {
-  width: 100%;
-  border-radius: 10px;
-  margin-bottom: 10px;
-}
-
-/* Nearby Places */
+  /* Nearby Places */
 .places-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -208,43 +220,24 @@ button:hover {
 
 <body>
 
-<div class="container">
+<!-- NAVBAR -->
+<nav class="navbar">
+<h2>عدن</h2>
+<ul>
+<li><a href="#home">الرئيسية</a></li>
+<li><a href="#exp">شارك تجربتك</a></li>
+<li><a href="#survey">استبيان</a></li>
+</ul>
+</nav>
 
-  <!-- ===== FORM ===== -->
-  <div class="card">
-    <div class="section-title">نموذج الإدخال</div>
-
-    <div class="form-group">
-      <label>الاسم</label>
-      <input type="text">
-    </div>
-
-    <div class="form-group">
-      <label>الوصف</label>
-      <textarea rows="3"></textarea>
-    </div>
-
-    <div class="form-group">
-      <label>الصورة</label>
-      <input type="file">
-    </div>
-
-    <button>إرسال</button>
-
-    <div class="message success">تم الإرسال بنجاح</div>
-    <div class="message error">حدث خطأ</div>
-  </div>
-
-  <!-- ===== IMAGE PREVIEW ===== -->
-  <div class="card">
-    <div class="section-title">معاينة الصور</div>
-
-    <div class="preview-container">
-      <img src="https://via.placeholder.com/400x200">
-      <img src="https://via.placeholder.com/400x200">
-    </div>
-  </div>
-
+<!-- HERO -->
+<section id="home" class="hero">
+<div class="hero-overlay">
+<h1>اكتشف سحر عدن</h1>
+<a href="#exp" class="btn-primary">ابدأ</a>
+</div>
+</section>  
+  
   <!-- ===== NEARBY PLACES ===== -->
   <div class="card">
     <div class="section-title">الأماكن القريبة</div>
@@ -283,5 +276,271 @@ button:hover {
 
 </div>
 
+
+<!-- EXPERIENCES -->
+<section id="exp" class="section">
+<h2 class="section-title">شارك تجربتك</h2>
+
+<button class="primary-btn" id="openBtn">إضافة تجربة</button>
+
+<div id="gallery" class="gallery"></div>
+</section>
+
+<!-- MODAL -->
+<div id="modal" class="modal">
+<div class="modal-content">
+
+<h3 style="text-align:center">شاركنا تجربتك</h3>
+
+<form id="form">
+<input type="text" id="name" placeholder="اسمك" required>
+<input type="text" id="place" placeholder="المكان" required>
+
+<div id="uploadBox">اضغط لاختيار صورة</div>
+<input type="file" id="file" accept="image/*" hidden>
+
+<img id="preview">
+
+<textarea id="comment" placeholder="تعليقك" required></textarea>
+
+<button type="submit" class="primary-btn">نشر</button>
+</form>
+
+</div>
+</div>
+
+<!-- SURVEY -->
+<form id="surveyForm" class="survey-form">
+<input type="text" name="name" placeholder="اسمك" required>
+<input type="hidden" name="rating" id="ratingValue">
+
+<textarea name="msg" placeholder="رأيك" required></textarea>
+
+<button class="primary-btn">إرسال</button>
+  <div id="expMsg" class="form-message"></div>
+<p id="successMsg" style="display:none;color:green;text-align:center">
+✅ تم إرسال ردك بنجاح شكراً لك
+</p>
+
+</form>
+
+<!-- FOOTER -->
+<footer id="footer">
+<p>© 2026 سفراء الزمن</p>
+<div class="social">
+<i class="fab fa-facebook"></i>
+<i class="fab fa-instagram"></i>
+<i class="fab fa-twitter"></i>
+</div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+document.addEventListener("DOMContentLoaded", ()=>{
+
+/* ===== Supabase ===== */
+const supabase = window.supabase.createClient(
+  "https://txqqfiphdsuedwcrvjjs.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR4cXFmaXBoZHN1ZWR3Y3J2ampzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY1OTIzOTQsImV4cCI6MjA5MjE2ODM5NH0.csgtDlFliEZzNgntm3IT99IEOXFjHTV3xqFP_3DJNWc"
+);
+
+/* ===== عناصر ===== */
+const modal = document.getElementById("modal");
+const openBtn = document.getElementById("openBtn");
+const form = document.getElementById("form");
+const fileInput = document.getElementById("file");
+const uploadBox = document.getElementById("uploadBox");
+const preview = document.getElementById("preview");
+const gallery = document.getElementById("gallery");
+
+/* المدخلات (المهم) */
+const nameInput = document.getElementById("name");
+const placeInput = document.getElementById("place");
+const commentInput = document.getElementById("comment");
+
+let imageFile = null;
+
+/* ===== فتح المودال ===== */
+openBtn.onclick = () => {
+  modal.style.display = "flex";
+};
+
+/* ===== إغلاق ===== */
+modal.onclick = (e) => {
+  if(e.target === modal){
+    modal.style.display = "none";
+  }
+};
+
+/* ===== اختيار صورة ===== */
+uploadBox.onclick = () => fileInput.click();
+
+fileInput.onchange = () => {
+  imageFile = fileInput.files[0];
+
+  if(!imageFile) return;
+
+  preview.src = URL.createObjectURL(imageFile);
+  preview.style.display = "block";
+};
+
+/* ===== إضافة كرت ===== */
+function addCard(name, place, comment, image){
+  const card = document.createElement("div");
+  card.className = "gallery-card";
+
+  card.innerHTML = `
+    <img src="${image}">
+    <div class="card-content">
+      <h4>${place}</h4>
+      <p>${comment}</p>
+      <span>${name}</span>
+    </div>
+  `;
+
+  gallery.prepend(card);
+} 
+  const expMsg = document.getElementById("expMsg");
+
+function showMessage(text, type="success"){
+  expMsg.innerText = text;
+  expMsg.className = "form-message " + type;
+  expMsg.style.display = "block";
+
+  setTimeout(()=>{
+    expMsg.style.display = "none";
+  }, 3000);
+}
+
+/* ===== إرسال ===== */
+form.onsubmit = async (e) => {
+  e.preventDefault();
+
+  const name = nameInput.value.trim();
+  const place = placeInput.value.trim();
+  const comment = commentInput.value.trim();
+
+  if(!name || !place || !comment){
+    alert("أكمل جميع الحقول");
+    return;
+  }
+
+  if(!imageFile){
+    alert("ارفع صورة");
+    return;
+  }
+
+  try{
+
+    const fileName = Date.now() + "-" + imageFile.name;
+
+    /* رفع الصورة */
+    const { error: uploadError } = await supabase
+      .storage
+      .from("experiences")
+      .upload(fileName, imageFile);
+
+    if(uploadError) throw uploadError;
+
+    /* جلب الرابط */
+    const { data } = supabase
+      .storage
+      .from("experiences")
+      .getPublicUrl(fileName);
+
+    const image_url = data.publicUrl;
+
+    /* إدخال DB */
+    const { error: dbError } = await supabase
+      .from("experiences")
+      .insert([{
+        user_name: name,
+        place: place,
+        comment: comment,
+        image_url: image_url
+      }]);
+
+    if(dbError) throw dbError;
+
+    /* عرض */
+    addCard(name, place, comment, image_url);
+
+    /* Reset */
+    form.reset();
+    preview.style.display = "none";
+    imageFile = null;
+    modal.style.display = "none";
+showMessage("✅ تم نشر تجربتك شكراً لتفاعلك");
+
+  }catch(err){
+    console.error(err);
+showMessage("❌ حدث خطأ أثناء النشر", "error");  }
+};
+
+/* ===== تحميل البيانات ===== */
+async function loadData(){
+
+  const { data, error } = await supabase
+    .from("experiences")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if(error){
+    console.error(error);
+    return;
+  }
+
+  data.forEach(item=>{
+    addCard(
+      item.user_name,
+      item.place,
+      item.comment,
+      item.image_url
+    );
+  });
+}
+
+loadData();
+
+});
+  const stars = document.querySelectorAll(".rating span");
+const ratingValue = document.getElementById("ratingValue");
+
+stars.forEach(star=>{
+  star.addEventListener("click", ()=>{
+    stars.forEach(s=>s.classList.remove("active"));
+    star.classList.add("active");
+    ratingValue.value = star.dataset.rate;
+  });
+});
+
+/* إرسال بدون redirect */
+const surveyForm = document.getElementById("surveyForm");
+
+surveyForm.addEventListener("submit", async (e)=>{
+  e.preventDefault();
+
+  const data = new FormData(surveyForm);
+
+  const res = await fetch("https://formspree.io/f/xaqajwvd",{
+    method:"POST",
+    body:data,
+    headers:{Accept:"application/json"}
+  });
+
+if(res.ok){
+  const msg = document.getElementById("successMsg");
+  msg.style.display = "block";
+  surveyForm.reset();
+
+  setTimeout(()=>{
+    msg.style.display = "none";
+  }, 3000);
+}
+} );
+</script>
+
 </body>
-</html>
+</html>  
+
+
+
