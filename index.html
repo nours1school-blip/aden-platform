@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -5,348 +6,200 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>سفراء الزمن</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;800&family=Tajawal:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;800&family=Tajawal&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
-/* ================= ROOT ================= */
-:root{
-  --primary:#0077be;
-  --primary-dark:#005f96;
-  --accent:#f4a460;
-  --bg:#f5f9ff;
-  --card-bg:#ffffff;
-  --text:#1a1a1a;
-}
-
-/* ================= GLOBAL ================= */
-*{
-  box-sizing:border-box;
-  font-family:'Tajawal',sans-serif;
-}
-
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--text);
-}
-
-h1,h2,h3{
-  font-family:'Cairo',sans-serif;
-}
-
-/* ================= NAVBAR ================= */
-.navbar{
-  position:fixed;
-  top:0;
-  width:100%;
-  background:var(--primary);
-  color:#fff;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:14px 30px;
-  z-index:1000;
-  box-shadow:0 4px 15px rgba(0,0,0,.1);
-}
-
-.navbar ul{
-  display:flex;
-  gap:20px;
-  list-style:none;
-}
-
-.navbar a{
-  color:#fff;
-  text-decoration:none;
-  font-weight:500;
-  transition:.3s;
-}
-
-.navbar a:hover{
-  opacity:.8;
-}
-
-/* ================= HERO ================= */
-.hero{
-  height:100vh;
-  background:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e') center/cover;
-}
-
-.hero-overlay{
-  background:rgba(0,0,0,.6);
-  height:100%;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-  color:#fff;
-  padding:20px;
-}
-
-.hero h1{
-  font-size:40px;
-  margin-bottom:20px;
-}
-
-/* ================= BUTTONS ================= */
-.btn-primary,
-.primary-btn{
-  background:var(--accent);
-  color:#fff;
-  padding:12px 26px;
-  border-radius:30px;
-  border:none;
-  cursor:pointer;
-  font-size:15px;
-  transition:.3s;
-  display:inline-block;
-  text-decoration:none;
-}
-
-.btn-primary:hover,
-.primary-btn:hover{
-  transform:translateY(-2px);
-  box-shadow:0 6px 15px rgba(0,0,0,.15);
-}
-
-/* ================= SECTIONS ================= */
-.section{
-  padding:100px 20px 60px;
-}
-
-.section-title{
-  text-align:center;
-  font-size:26px;
-  color:var(--primary);
-  margin-bottom:30px;
-}
-
-/* ================= CARD ================= */
-.card{
-  max-width:1100px;
-  margin:40px auto;
-  background:#fff;
-  border-radius:18px;
-  padding:25px;
-  box-shadow:0 10px 30px rgba(0,0,0,.08);
-}
-
-/* ================= GALLERY ================= */
-.gallery{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-  gap:20px;
-  max-width:1100px;
-  margin:30px auto;
-}
-
-.gallery-card{
-  background:#fff;
-  border-radius:15px;
-  overflow:hidden;
-  box-shadow:0 10px 25px rgba(0,0,0,.08);
-  transition:.3s;
-}
-
-.gallery-card:hover{
-  transform:translateY(-5px);
-}
-
-.gallery-card img{
-  width:100%;
-  height:200px;
-  object-fit:cover;
-}
-
-.card-content{
-  padding:15px;
-  text-align:center;
-}
-
-/* ================= MODAL ================= */
-.modal{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.6);
-  align-items:center;
-  justify-content:center;
-}
-
+*{box-sizing:border-box;font-family:'Tajawal',sans-serif}
+body{margin:0;background:linear-gradient(135deg,#e9f2ff,#f7fbff)}
 .modal-content{
   background:#fff;
-  padding:25px;
-  border-radius:18px;
+  padding:20px;
+  border-radius:15px;
   width:90%;
-  max-width:420px;
-  max-height:90vh;
-  overflow-y:auto;
-  box-shadow:0 15px 40px rgba(0,0,0,.2);
-}
+  max-width:400px;
 
-/* ================= FORM ================= */
-form input,
-form textarea{
+  max-height:90vh;   /* مهم */
+  overflow-y:auto;   /* هذا هو السكرول */
+} 
+  form input, form textarea{
   width:100%;
-  padding:12px;
-  border-radius:12px;
+  padding:10px;
+  border-radius:10px;
   border:1px solid #ddd;
   outline:none;
-  font-size:14px;
   transition:.3s;
 }
 
-form input:focus,
-form textarea:focus{
-  border-color:var(--primary);
-  box-shadow:0 0 0 3px rgba(0,119,190,0.1);
+form input:focus, form textarea:focus{
+  border-color:#0077be;
+  box-shadow:0 0 5px rgba(0,119,190,0.3);
 }
 
 form textarea{
   resize:none;
-  min-height:90px;
+  min-height:80px;
+} 
+  
+.navbar{
+position:fixed;top:0;width:100%;
+background:#0077be;color:#fff;
+display:flex;justify-content:space-between;
+padding:12px 25px;z-index:1000;
+}
+.navbar ul{display:flex;gap:15px;list-style:none}
+.navbar a{color:#fff;text-decoration:none;font-weight:bold}
+
+.hero{height:100vh;background:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e') center/cover}
+.hero-overlay{
+background:rgba(0,0,0,.6);
+height:100%;display:flex;
+flex-direction:column;justify-content:center;align-items:center;
+color:#fff;text-align:center;
+}
+.btn-primary{background:#f4a460;padding:12px 28px;border-radius:10px}
+
+.section{padding:90px 20px}
+.section-title{text-align:center;color:#0077be;font-size:28px}
+
+.gallery{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;max-width:1100px;margin:30px auto;
+}
+.gallery-card{
+background:#fff;border-radius:15px;
+overflow:hidden;box-shadow:0 10px 25px rgba(0,0,0,.1);
+}
+.gallery-card img{width:100%;height:200px;object-fit:cover}
+.card-content{text-align:center;padding:10px}
+
+.primary-btn{
+background:#0077be;color:#fff;
+border:none;padding:12px 25px;
+border-radius:25px;cursor:pointer;
+display:block;margin:20px auto;
 }
 
-/* ================= UPLOAD ================= */
+.modal{
+display:none;position:fixed;
+inset:0;background:rgba(0,0,0,.6);
+align-items:center;justify-content:center;
+}
+.modal-content{
+background:#fff;padding:20px;border-radius:15px;
+width:90%;max-width:400px;
+}
+
 #uploadBox{
-  margin-top:10px;
-  padding:25px;
-  border:2px dashed var(--primary);
-  border-radius:12px;
-  text-align:center;
-  cursor:pointer;
-  background:#f7fbff;
-  transition:.3s;
+margin-top:10px;
+padding:20px;
+border:2px dashed #0077be;
+border-radius:12px;
+text-align:center;
+cursor:pointer;
+background:#f7fbff;
 }
+#preview{width:100%;margin-top:10px;border-radius:10px;display:none}
 
-#uploadBox:hover{
-  background:#eef6ff;
-}
-
-#preview{
-  width:100%;
-  margin-top:10px;
-  border-radius:10px;
-  display:none;
-}
-
-/* ================= SURVEY ================= */
+/* ===== SURVEY ===== */
 .survey-form{
-  max-width:500px;
-  margin:40px auto;
-  background:#fff;
-  padding:25px;
-  border-radius:18px;
-  box-shadow:0 10px 25px rgba(0,0,0,.08);
-  display:flex;
-  flex-direction:column;
-  gap:15px;
+max-width:500px;margin:40px auto;
+background:#fff;padding:20px;
+border-radius:15px;
+box-shadow:0 10px 25px rgba(0,0,0,.1);
+display:flex;flex-direction:column;gap:10px;
 }
 
-/* ================= MESSAGE ================= */
-.form-message{
-  margin-top:12px;
-  padding:12px;
-  border-radius:12px;
-  font-size:14px;
-  display:none;
-  text-align:center;
+#footer{
+background:#0b3c5d;color:#fff;
+text-align:center;padding:30px;
+}
+.social{display:flex;justify-content:center;gap:20px;margin-top:10px}
+
+
+  .form-message{
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-size: 15px;
+  display: none;
+  text-align: center;
 }
 
 .form-message.success{
-  background:#e6f7ec;
-  color:#146c2e;
+  background: #e6f7ec;
+  color: #146c2e;
+  border: 1px solid #b7ebc6;
 }
 
 .form-message.error{
-  background:#fdecec;
-  color:#b42318;
+  background: #fdecec;
+  color: #b42318;
+  border: 1px solid #f5b5b5;
 }
-
-/* ================= NEARBY ================= */
-.places-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-  gap:20px;
+  .rating{
+display:flex;
+justify-content:center;
+gap:10px;
+font-size:25px;
+cursor:pointer;
+}
+.rating span:hover,
+.rating span.active{
+color:gold;
+} 
+    /* ===== NEARBY PLACES ===== */
+.places{
+max-width:1100px;
+margin:30px auto;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:20px;
 }
 
 .place-card{
-  background:#fff;
-  border-radius:16px;
-  overflow:hidden;
-  box-shadow:0 8px 20px rgba(0,0,0,.08);
-  transition:.3s;
+background:#fff;
+border-radius:16px;
+overflow:hidden;
+box-shadow:0 8px 20px rgba(0,0,0,.08);
+transition:.3s;
 }
-
-.place-card:hover{
-  transform:translateY(-6px);
-}
+.place-card:hover{transform:translateY(-6px)}
 
 .place-card img{
-  width:100%;
-  height:160px;
-  object-fit:cover;
+width:100%;
+height:180px;
+object-fit:cover;
 }
 
-.place-content{
-  padding:15px;
-}
+.place-content{padding:15px}
 
-.place-title{
-  font-size:16px;
-  font-weight:bold;
-  margin-bottom:6px;
-}
+.place-content h3{margin:0 0 8px;font-size:18px}
 
-.place-desc{
-  font-size:13px;
-  color:#666;
-  margin-bottom:10px;
+.place-content p{
+font-size:14px;
+color:#666;
+margin-bottom:10px;
 }
 
 .place-btn{
-  display:inline-block;
-  padding:8px 14px;
-  border-radius:10px;
-  background:var(--primary);
-  color:#fff;
-  text-decoration:none;
-  font-size:13px;
-  transition:.3s;
+display:inline-block;
+padding:8px 14px;
+background:#0077be;
+color:#fff;
+border-radius:10px;
+text-decoration:none;
+font-size:14px;
+transition:.3s;
 }
-
-.place-btn:hover{
-  background:var(--primary-dark);
-}
-
-/* ================= FOOTER ================= */
-#footer{
-  background:#0b3c5d;
-  color:#fff;
-  text-align:center;
-  padding:30px;
-  margin-top:50px;
-}
-
-.social{
-  display:flex;
-  justify-content:center;
-  gap:20px;
-  margin-top:10px;
-}
-
-/* ================= RESPONSIVE ================= */
-@media (max-width:768px){
-  .hero h1{font-size:28px}
-  .navbar{padding:10px 15px}
-}
+.place-btn:hover{background:#005f94}
 </style>
 </head>
 
 <body>
 
+<!-- NAVBAR -->
 <nav class="navbar">
 <h2>عدن</h2>
 <ul>
@@ -356,54 +209,61 @@ form textarea{
 </ul>
 </nav>
 
+<!-- HERO -->
 <section id="home" class="hero">
 <div class="hero-overlay">
 <h1>اكتشف سحر عدن</h1>
 <a href="#exp" class="btn-primary">ابدأ</a>
 </div>
 </section>
+    
+    <!-- ===== NEARBY PLACES ===== -->
+<section id="places" class="section">
+<h2 class="section-title">الأماكن القريبة</h2>
 
-<div class="card">
-<div class="section-title">الأماكن القريبة</div>
-
-<div class="places-grid">
-
-<div class="place-card">
-<img src="https://via.placeholder.com/300x200">
-<div class="place-content">
-<div class="place-title">مطعم مميز</div>
-<div class="place-desc">وصف قصير عن المكان بشكل جذاب</div>
-<a href="#" class="place-btn">عرض</a>
-</div>
-</div>
+<div class="places">
 
 <div class="place-card">
-<img src="https://via.placeholder.com/300x200">
+<img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c">
 <div class="place-content">
-<div class="place-title">مقهى جميل</div>
-<div class="place-desc">مكان هادئ ومناسب للعمل</div>
-<a href="#" class="place-btn">تفاصيل</a>
+<h3>عدن مول</h3>
+<p>أشهر مركز تسوق في عدن</p>
+<a href="https://maps.google.com/?q=عدن+مول" target="_blank" class="place-btn">عرض على الخريطة</a>
 </div>
 </div>
 
 <div class="place-card">
-<img src="https://via.placeholder.com/300x200">
+<img src="https://images.unsplash.com/photo-1526772662000-3f88f10405ff">
 <div class="place-content">
-<div class="place-title">حديقة عامة</div>
-<div class="place-desc">مساحة خضراء للاسترخاء</div>
-<a href="#" class="place-btn">عرض</a>
+<h3>صهاريج عدن</h3>
+<p>معلم تاريخي شهير في كريتر</p>
+<a href="https://maps.google.com/?q=صهاريج+عدن" target="_blank" class="place-btn">عرض على الخريطة</a>
+</div>
+</div>
+
+<div class="place-card">
+<img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5">
+<div class="place-content">
+<h3>مطعم الشراع</h3>
+<p>مطعم مميز بإطلالة بحرية رائعة</p>
+<a href="https://maps.google.com/?q=مطعم+الشراع+عدن" target="_blank" class="place-btn">عرض على الخريطة</a>
 </div>
 </div>
 
 </div>
-</div>
+</section>
 
+
+<!-- EXPERIENCES -->
 <section id="exp" class="section">
 <h2 class="section-title">شارك تجربتك</h2>
+
 <button class="primary-btn" id="openBtn">إضافة تجربة</button>
+
 <div id="gallery" class="gallery"></div>
 </section>
 
+<!-- MODAL -->
 <div id="modal" class="modal">
 <div class="modal-content">
 
@@ -426,17 +286,22 @@ form textarea{
 </div>
 </div>
 
+<!-- SURVEY -->
 <form id="surveyForm" class="survey-form">
 <input type="text" name="name" placeholder="اسمك" required>
 <input type="hidden" name="rating" id="ratingValue">
+
 <textarea name="msg" placeholder="رأيك" required></textarea>
+
 <button class="primary-btn">إرسال</button>
-<div id="expMsg" class="form-message"></div>
+  <div id="expMsg" class="form-message"></div>
 <p id="successMsg" style="display:none;color:green;text-align:center">
 ✅ تم إرسال ردك بنجاح شكراً لك
 </p>
+
 </form>
 
+<!-- FOOTER -->
 <footer id="footer">
 <p>© 2026 سفراء الزمن</p>
 <div class="social">
@@ -445,10 +310,210 @@ form textarea{
 <i class="fab fa-twitter"></i>
 </div>
 </footer>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-/* JS UNCHANGED */
+document.addEventListener("DOMContentLoaded", ()=>{
+
+/* ===== Supabase ===== */
+const supabase = window.supabase.createClient(
+  "https://txqqfiphdsuedwcrvjjs.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR4cXFmaXBoZHN1ZWR3Y3J2ampzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY1OTIzOTQsImV4cCI6MjA5MjE2ODM5NH0.csgtDlFliEZzNgntm3IT99IEOXFjHTV3xqFP_3DJNWc"
+);
+
+/* ===== عناصر ===== */
+const modal = document.getElementById("modal");
+const openBtn = document.getElementById("openBtn");
+const form = document.getElementById("form");
+const fileInput = document.getElementById("file");
+const uploadBox = document.getElementById("uploadBox");
+const preview = document.getElementById("preview");
+const gallery = document.getElementById("gallery");
+
+/* المدخلات (المهم) */
+const nameInput = document.getElementById("name");
+const placeInput = document.getElementById("place");
+const commentInput = document.getElementById("comment");
+
+let imageFile = null;
+
+/* ===== فتح المودال ===== */
+openBtn.onclick = () => {
+  modal.style.display = "flex";
+};
+
+/* ===== إغلاق ===== */
+modal.onclick = (e) => {
+  if(e.target === modal){
+    modal.style.display = "none";
+  }
+};
+
+/* ===== اختيار صورة ===== */
+uploadBox.onclick = () => fileInput.click();
+
+fileInput.onchange = () => {
+  imageFile = fileInput.files[0];
+
+  if(!imageFile) return;
+
+  preview.src = URL.createObjectURL(imageFile);
+  preview.style.display = "block";
+};
+
+/* ===== إضافة كرت ===== */
+function addCard(name, place, comment, image){
+  const card = document.createElement("div");
+  card.className = "gallery-card";
+
+  card.innerHTML = `
+    <img src="${image}">
+    <div class="card-content">
+      <h4>${place}</h4>
+      <p>${comment}</p>
+      <span>${name}</span>
+    </div>
+  `;
+
+  gallery.prepend(card);
+} 
+  const expMsg = document.getElementById("expMsg");
+
+function showMessage(text, type="success"){
+  expMsg.innerText = text;
+  expMsg.className = "form-message " + type;
+  expMsg.style.display = "block";
+
+  setTimeout(()=>{
+    expMsg.style.display = "none";
+  }, 3000);
+}
+
+/* ===== إرسال ===== */
+form.onsubmit = async (e) => {
+  e.preventDefault();
+
+  const name = nameInput.value.trim();
+  const place = placeInput.value.trim();
+  const comment = commentInput.value.trim();
+
+  if(!name || !place || !comment){
+    alert("أكمل جميع الحقول");
+    return;
+  }
+
+  if(!imageFile){
+    alert("ارفع صورة");
+    return;
+  }
+
+  try{
+
+    const fileName = Date.now() + "-" + imageFile.name;
+
+    /* رفع الصورة */
+    const { error: uploadError } = await supabase
+      .storage
+      .from("experiences")
+      .upload(fileName, imageFile);
+
+    if(uploadError) throw uploadError;
+
+    /* جلب الرابط */
+    const { data } = supabase
+      .storage
+      .from("experiences")
+      .getPublicUrl(fileName);
+
+    const image_url = data.publicUrl;
+
+    /* إدخال DB */
+    const { error: dbError } = await supabase
+      .from("experiences")
+      .insert([{
+        user_name: name,
+        place: place,
+        comment: comment,
+        image_url: image_url
+      }]);
+
+    if(dbError) throw dbError;
+
+    /* عرض */
+    addCard(name, place, comment, image_url);
+
+    /* Reset */
+    form.reset();
+    preview.style.display = "none";
+    imageFile = null;
+    modal.style.display = "none";
+showMessage("✅ تم نشر تجربتك شكراً لتفاعلك");
+
+  }catch(err){
+    console.error(err);
+showMessage("❌ حدث خطأ أثناء النشر", "error");  }
+};
+
+/* ===== تحميل البيانات ===== */
+async function loadData(){
+
+  const { data, error } = await supabase
+    .from("experiences")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if(error){
+    console.error(error);
+    return;
+  }
+
+  data.forEach(item=>{
+    addCard(
+      item.user_name,
+      item.place,
+      item.comment,
+      item.image_url
+    );
+  });
+}
+
+loadData();
+
+});
+  const stars = document.querySelectorAll(".rating span");
+const ratingValue = document.getElementById("ratingValue");
+
+stars.forEach(star=>{
+  star.addEventListener("click", ()=>{
+    stars.forEach(s=>s.classList.remove("active"));
+    star.classList.add("active");
+    ratingValue.value = star.dataset.rate;
+  });
+});
+
+/* إرسال بدون redirect */
+const surveyForm = document.getElementById("surveyForm");
+
+surveyForm.addEventListener("submit", async (e)=>{
+  e.preventDefault();
+
+  const data = new FormData(surveyForm);
+
+  const res = await fetch("https://formspree.io/f/xaqajwvd",{
+    method:"POST",
+    body:data,
+    headers:{Accept:"application/json"}
+  });
+
+if(res.ok){
+  const msg = document.getElementById("successMsg");
+  msg.style.display = "block";
+  surveyForm.reset();
+
+  setTimeout(()=>{
+    msg.style.display = "none";
+  }, 3000);
+}
+} );
 </script>
 
 </body>
