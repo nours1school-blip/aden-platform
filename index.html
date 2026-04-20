@@ -11,7 +11,35 @@
 <style>
 *{box-sizing:border-box;font-family:'Tajawal',sans-serif}
 body{margin:0;background:linear-gradient(135deg,#e9f2ff,#f7fbff)}
+.modal-content{
+  background:#fff;
+  padding:20px;
+  border-radius:15px;
+  width:90%;
+  max-width:400px;
 
+  max-height:90vh;   /* مهم */
+  overflow-y:auto;   /* هذا هو السكرول */
+} 
+  form input, form textarea{
+  width:100%;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid #ddd;
+  outline:none;
+  transition:.3s;
+}
+
+form input:focus, form textarea:focus{
+  border-color:#0077be;
+  box-shadow:0 0 5px rgba(0,119,190,0.3);
+}
+
+form textarea{
+  resize:none;
+  min-height:80px;
+} 
+  
 .navbar{
 position:fixed;top:0;width:100%;
 background:#0077be;color:#fff;
@@ -183,7 +211,7 @@ color:gold;
 <textarea name="msg" placeholder="رأيك" required></textarea>
 
 <button class="primary-btn">إرسال</button>
-
+  <div id="expMsg" class="form-message"></div>
 <p id="successMsg" style="display:none;color:green;text-align:center">
 ✅ تم إرسال ردك بنجاح شكراً لك
 </p>
@@ -264,6 +292,17 @@ function addCard(name, place, comment, image){
   `;
 
   gallery.prepend(card);
+} 
+  const expMsg = document.getElementById("expMsg");
+
+function showMessage(text, type="success"){
+  expMsg.innerText = text;
+  expMsg.className = "form-message " + type;
+  expMsg.style.display = "block";
+
+  setTimeout(()=>{
+    expMsg.style.display = "none";
+  }, 3000);
 }
 
 /* ===== إرسال ===== */
@@ -324,13 +363,11 @@ form.onsubmit = async (e) => {
     preview.style.display = "none";
     imageFile = null;
     modal.style.display = "none";
-
-    alert("تم النشر ✅");
+showMessage("✅ تم نشر تجربتك شكراً لتفاعلك");
 
   }catch(err){
     console.error(err);
-    alert("خطأ: " + err.message);
-  }
+showMessage("❌ حدث خطأ أثناء النشر", "error");  }
 };
 
 /* ===== تحميل البيانات ===== */
@@ -384,13 +421,16 @@ surveyForm.addEventListener("submit", async (e)=>{
     headers:{Accept:"application/json"}
   });
 
-  if(res.ok){
-    document.getElementById("successMsg").style.display="block";
-    surveyForm.reset();
-  }else{
-    alert("حدث خطأ ❌");
-  }
-});
+if(res.ok){
+  const msg = document.getElementById("successMsg");
+  msg.style.display = "block";
+  surveyForm.reset();
+
+  setTimeout(()=>{
+    msg.style.display = "none";
+  }, 3000);
+}
+} );
 </script>
 
 </body>
